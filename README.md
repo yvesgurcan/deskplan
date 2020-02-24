@@ -1,3 +1,3 @@
 # deskplan
 
-📎 Managing your office supplies as never been easier!
+📎 Managing your office supplies has never been easier!
