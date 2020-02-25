@@ -1,0 +1,17 @@
+{
+    "name": "deskplan-service",
+    "version": "0.0.1",
+    "description": "DeskPlan Service",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon -r esm src"
+    },
+    "author": "Yves Gurcan",
+    "license": "MIT",
+    "dependencies": {
+        "apollo-server": "^2.10.1",
+        "esm": "^3.2.25",
+        "graphql": "^14.6.0",
+        "nodemon": "^2.0.2"
+    }
+}
