@@ -12,19 +12,7 @@
 
 ### Set up
 
-From the root of the project:
-
-Start development server for the client
-
-    cd client
-    npm start
-
-Start Node service
-
-    cd service
-    npm start
-
-Requires Node 13 or greater.
+See instructions for client and service.
 
 ## Assignment (in French)
 

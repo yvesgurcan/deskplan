@@ -4,7 +4,9 @@
     "description": "DeskPlan Service",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon -r esm src"
+        "start": "concurrently --kill-others \"npm run start:service\" \"npm run start:db\"",
+        "start:service": "nodemon -r esm src",
+        "start:db": "mongod --dbpath=/data --quiet"
     },
     "author": "Yves Gurcan",
     "license": "MIT",
@@ -12,6 +14,11 @@
         "apollo-server": "^2.10.1",
         "esm": "^3.2.25",
         "graphql": "^14.6.0",
+        "mongodb": "^3.5.3",
+        "mongoose": "^5.9.2",
         "nodemon": "^2.0.2"
+    },
+    "devDependencies": {
+        "concurrently": "^5.1.0"
     }
 }

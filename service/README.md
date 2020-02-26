@@ -6,6 +6,8 @@
 -   Apollo Server
 -   MongoDB
 
+Requires Node 13 or greater.
+
 ## Setup
 
     npm i
@@ -14,4 +16,4 @@
 
     npm start
 
-An Apollo server will start listening for requests at `localhost:4000`.
+An Apollo server will start listening for requests at `localhost:4000` and a MongoDB instance will be started.
