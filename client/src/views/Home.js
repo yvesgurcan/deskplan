@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import DateTime from 'luxon/src/datetime.js';
 
 const ITEMS = gql`
     query getItems {
@@ -30,7 +31,6 @@ export default () => {
         }
     }, [data]);
 
-    console.log({ data });
     return (
         <Fragment>
             <Search>
@@ -40,11 +40,16 @@ export default () => {
                 </div>
             </Search>
             <Results>
-                {filteredItems.map(({ id, name, count, updatedAt }) => (
-                    <Item key={id}>
-                        {name} (x{count})
-                    </Item>
-                ))}
+                {filteredItems.map(({ id, name, count, updatedAt }) => {
+                    const updatedAtLocal = DateTime.fromMillis(
+                        parseInt(updatedAt)
+                    );
+                    return (
+                        <Item key={id}>
+                            {name} (x{count}) {updatedAtLocal.toRelative()}
+                        </Item>
+                    );
+                })}
             </Results>
         </Fragment>
     );

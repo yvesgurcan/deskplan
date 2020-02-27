@@ -7,7 +7,8 @@
         "start": "concurrently --kill-others \"npm run start:service\" \"npm run start:db\"",
         "start:service": "nodemon -r esm src",
         "start:db": "mongod --dbpath=/data",
-        "start:db:quiet": "mongod --dbpath=/data --quiet"
+        "start:db:quiet": "mongod --dbpath=/data --port --quiet",
+        "kill:db": "mongod --shutdown"
     },
     "author": "Yves Gurcan",
     "license": "MIT",

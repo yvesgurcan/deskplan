@@ -22,14 +22,6 @@ export default gql`
         ${ItemFields}
     }
 
-    type ItemUpdate {
-        id: ID
-        ok: Int
-        createdAt: String
-        updatedAt: String
-        ${ItemFields}
-    }
-
     type Query {
         items: [Item]
     }

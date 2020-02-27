@@ -2,12 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from '@apollo/react-hooks';
 
 import Home from './views/Home';
-
-import ApolloClient from 'apollo-boost';
-
-import { ApolloProvider } from '@apollo/react-hooks';
 
 const client = new ApolloClient({
     uri: 'http://localhost:4000'
