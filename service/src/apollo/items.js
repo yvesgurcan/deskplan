@@ -14,3 +14,24 @@ export async function createItems(_, { items }) {
     close();
     return result;
 }
+
+export async function updateItems(_, { items }) {
+    connect();
+    let result = [];
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const { id, ...updatedFields } = item;
+        const r = await ItemModel.findByIdAndUpdate(id, updatedFields);
+        result.push(r);
+    }
+    close();
+    return result;
+}
+
+export async function deleteItems(_, { itemIds }) {
+    connect();
+    console.log({ itemIds });
+    const result = await ItemModel.deleteMany(itemIds);
+    close();
+    return result;
+}

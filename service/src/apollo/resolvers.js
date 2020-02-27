@@ -1,10 +1,12 @@
-import { getItems, createItems } from './items';
+import { getItems, createItems, updateItems, deleteItems } from './items';
 
 export default {
     Query: {
         items: getItems
     },
     Mutation: {
-        createItems
+        createItems,
+        updateItems,
+        deleteItems
     }
 };

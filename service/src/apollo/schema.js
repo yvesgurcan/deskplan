@@ -1,18 +1,33 @@
 import { gql } from 'apollo-server';
 
+const ItemFields = `
+    name: String!
+    count: Int!
+`;
+
 export default gql`
     input ItemInput {
-        name: String!
-        count: Int!
+        ${ItemFields}
+    }
+
+    input UpdateItemInput {
+        id: ID!
+        ${ItemFields}
     }
 
     type Item {
-        name: String
-        count: Int
         id: ID
-        version: Int
         createdAt: String
         updatedAt: String
+        ${ItemFields}
+    }
+
+    type ItemUpdate {
+        id: ID
+        ok: Int
+        createdAt: String
+        updatedAt: String
+        ${ItemFields}
     }
 
     type Query {
@@ -21,5 +36,7 @@ export default gql`
 
     type Mutation {
         createItems(items: [ItemInput!]!): [Item]
+        updateItems(items: [UpdateItemInput!]!): [Item]
+        deleteItems(itemIds: [ID!]!): [String]
     }
 `;
