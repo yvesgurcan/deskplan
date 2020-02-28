@@ -2,7 +2,7 @@ import { ApolloError } from 'apollo-server';
 import mongoose from 'mongoose';
 
 // use the findAndModify() function from MongoDB under the hood instead of the findOneAndUpdate() function from Mongoose;
-mongoose.set('useFindAndModify', true);
+mongoose.set('useFindAndModify', false);
 
 export async function connect() {
     await mongoose.connect('mongodb://localhost:27017/deskplan', {

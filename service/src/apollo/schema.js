@@ -6,6 +6,10 @@ const ItemFields = `
 `;
 
 export default gql`
+    type User {
+        firstName: String
+    }
+
     input ItemInput {
         ${ItemFields}
     }
@@ -24,11 +28,13 @@ export default gql`
 
     type Query {
         items: [Item]
+        user: User
     }
 
     type Mutation {
+        addStarterItems: [Item]
         addItem(${ItemFields}): Item
-        updateItems(items: [UpdateItemInput!]!): [Item]
+        updateItem(id: ID!, ${ItemFields}): Item
         deleteItem(id: ID!): ID
     }
 `;

@@ -12,24 +12,26 @@ export async function addItem(_, item) {
     connect();
     try {
         const result = await ItemModel.create(item);
+        close();
         return result;
     } catch (error) {
         parseMongooseErrors(error);
     }
-    close();
 }
 
-export async function updateItems(_, { items }) {
+export async function updateItem(_, item) {
     connect();
-    let result = [];
-    for (let i = 0; i < items.length; i++) {
-        const item = items[i];
+    try {
         const { id, ...updatedFields } = item;
-        const r = await ItemModel.findByIdAndUpdate(id, updatedFields);
-        result.push(r);
+        const result = await ItemModel.findByIdAndUpdate(id, updatedFields, {
+            new: true,
+            runValidators: true
+        });
+        close();
+        return result;
+    } catch (error) {
+        parseMongooseErrors(error);
     }
-    close();
-    return result;
 }
 
 export async function deleteItem(_, { id }) {
@@ -38,4 +40,66 @@ export async function deleteItem(_, { id }) {
     close();
     const { _id } = result;
     return _id;
+}
+
+export async function addStarterItems() {
+    const TEMPLATE_ITEMS = [
+        {
+            name: 'Keyboard',
+            quantity: 41
+        },
+        {
+            name: 'Mouse',
+            quantity: 63
+        },
+        {
+            name: 'Chair',
+            quantity: 22
+        },
+        {
+            name: 'Monitor',
+            quantity: 23
+        },
+        {
+            name: 'Standing desk',
+            quantity: 16
+        },
+        {
+            name: 'Copies of Eloquent JavaScript',
+            quantity: 4
+        },
+        {
+            name: 'Espresso machine',
+            quantity: 2
+        },
+        {
+            name: 'Yoga ball',
+            quantity: 8
+        },
+        {
+            name: 'Fork',
+            quantity: 30
+        },
+        {
+            name: 'Knife',
+            quantity: 29
+        },
+        {
+            name: 'Spoon',
+            quantity: 34
+        },
+        {
+            name: 'Photocopier',
+            quantity: 3
+        }
+    ];
+
+    try {
+        connect();
+        const result = await ItemModel.create(TEMPLATE_ITEMS);
+        close();
+        return result;
+    } catch (error) {
+        parseMongooseErrors(error);
+    }
 }

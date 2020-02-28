@@ -2,7 +2,20 @@ import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
-import DateTime from 'luxon/src/datetime.js';
+import { parseApolloErrors } from '../util';
+import Item from '../components/Item';
+import Button from '../components/Button';
+import TextInput from '../components/TextInput';
+import NumberInput from '../components/NumberInput';
+import Error from '../components/Error';
+
+const GET_USER = gql`
+    query getUser {
+        user {
+            firstName
+        }
+    }
+`;
 
 const ItemFields = `
     id
@@ -28,6 +41,14 @@ const ADD_ITEM = gql`
     }
 `;
 
+const ADD_STARTER_ITEMS = gql`
+    mutation addStarterItems {
+        addStarterItems {
+            ${ItemFields}
+        }
+    }
+`;
+
 const DELETE_ITEM = gql`
     mutation deleteItem($id: ID!) {
         deleteItem(id: $id)
@@ -39,41 +60,22 @@ const DEFAULT_ADD_ITEM = {
     quantity: 0
 };
 
-function parseApolloErrors(errorObject) {
-    const networkErrors = errorObject?.networkError?.result?.errors;
-    if (networkErrors) {
-        return networkErrors.map(error => error.message);
-    }
-
-    const networkErrorMessage = errorObject?.networkError?.message;
-    if (networkErrorMessage) {
-        return [networkErrorMessage];
-    }
-
-    const graphQLErrors = errorObject?.graphQLErrors;
-    if (graphQLErrors) {
-        let errors = [];
-        graphQLErrors.forEach(error => {
-            if (error.message === 'ValidationError') {
-                error.extensions.code.forEach(validationError => {
-                    errors.push(validationError);
-                });
-                return;
-            }
-
-            errors.push(error.message);
-        });
-        return errors;
-    }
-
-    return [];
-}
-
 export default () => {
+    const [searchTerm, setSearchTerm] = useState('');
     const [filteredItems, setFilteredItems] = useState([]);
     const [itemToAdd, setItemToAdd] = useState({ ...DEFAULT_ADD_ITEM });
 
-    const { loading, error, data } = useQuery(GET_ITEMS);
+    const {
+        loading: getUserLoading,
+        error: getUserError,
+        data: { user } = {}
+    } = useQuery(GET_USER);
+
+    const {
+        loading: getItemsLoading,
+        error: getItemsError,
+        data: { items } = {}
+    } = useQuery(GET_ITEMS);
     const [addItem, { error: addItemError = [] }] = useMutation(ADD_ITEM, {
         update(cache, { data: { addItem } }) {
             if (addItem) {
@@ -85,6 +87,22 @@ export default () => {
             }
         }
     });
+
+    const [addStarterItems, { error: addStarterItemsError = [] }] = useMutation(
+        ADD_STARTER_ITEMS,
+        {
+            update(cache, { data: { addStarterItems } }) {
+                if (addStarterItems) {
+                    const { items } = cache.readQuery({ query: GET_ITEMS });
+                    cache.writeQuery({
+                        query: GET_ITEMS,
+                        data: { items: items.concat(addStarterItems) }
+                    });
+                }
+            }
+        }
+    );
+
     const [deleteItem, { error: deleteItemError = [] }] = useMutation(
         DELETE_ITEM,
         {
@@ -103,18 +121,40 @@ export default () => {
     );
 
     useEffect(() => {
-        if (data) {
-            const updatedItems = [...data.items].sort(
+        if (items) {
+            let searchedItems = [...items];
+            if (searchTerm) {
+                const lowerSearchterm = searchTerm.toLowerCase();
+                searchedItems = searchedItems.filter(item =>
+                    item.name.toLowerCase().includes(lowerSearchterm)
+                );
+            }
+
+            const updatedItems = [...searchedItems].sort(
                 ({ updatedAt: updatedAtA }, { updatedAt: updatedAtB }) => {
                     return updatedAtB - updatedAtA;
                 }
             );
             setFilteredItems(updatedItems);
         }
-    }, [data]);
+    }, [items, searchTerm]);
 
     return (
         <Fragment>
+            <Greetings>
+                {getUserError ? (
+                    <Title>Welcome back!</Title>
+                ) : user ? (
+                    <Title>Welcome back, {user.firstName}</Title>
+                ) : null}
+                <Error>
+                    {parseApolloErrors(getUserError).map(error => (
+                        <div key={error.message || error}>
+                            {error.message || error}
+                        </div>
+                    ))}
+                </Error>
+            </Greetings>
             <AddItem>
                 <Title>Add item</Title>
                 <Error>
@@ -128,14 +168,13 @@ export default () => {
                     onSubmit={event => {
                         event.preventDefault();
                         const quantity = Number(itemToAdd.quantity);
-                        setItemToAdd({ ...itemToAdd, quantity });
                         addItem({ variables: { ...itemToAdd, quantity } });
                     }}
                 >
                     <AddFormColumn>
                         <AddFormGroup>
                             <AddLabel>Name:</AddLabel>
-                            <AddInput
+                            <TextInput
                                 value={itemToAdd.name}
                                 placeholder="Name of item"
                                 onChange={event =>
@@ -148,10 +187,9 @@ export default () => {
                         </AddFormGroup>
                         <AddFormGroup>
                             <AddLabel>Quantity:</AddLabel>
-                            <AddQuantityInput
+                            <NumberInput
                                 value={itemToAdd.quantity}
                                 placeholder="Qty"
-                                type="number"
                                 onChange={event =>
                                     setItemToAdd({
                                         ...itemToAdd,
@@ -166,60 +204,103 @@ export default () => {
                     </AddFormColumn>
                 </AddForm>
             </AddItem>
-            <Search>
-                <Title>Recently updated items</Title>
-                <div>
-                    🔎 <SearchInput placeholder="Search" />
-                </div>
-            </Search>
-            <Results>
-                <Error>
-                    {parseApolloErrors(error).map(error => (
-                        <div key={error.message || error}>
-                            {error.message || error}
-                        </div>
-                    ))}
-                </Error>
-                <Error>
-                    {parseApolloErrors(deleteItemError).map(error => (
-                        <div key={error.message || error}>
-                            {error.message || error}
-                        </div>
-                    ))}
-                </Error>
-                {filteredItems.map(({ id, name, quantity, updatedAt }) => {
-                    const updatedAtLocal = DateTime.fromMillis(
-                        parseInt(updatedAt)
-                    );
-                    return (
-                        <Item key={id}>
-                            <div>
-                                {name} (x{quantity}){' '}
-                                {updatedAtLocal.toRelative()}{' '}
+            <ItemContainer>
+                <Search>
+                    <Title>Your inventory</Title>
+                    <div>
+                        🔎{' '}
+                        <SearchInput
+                            placeholder="Search"
+                            value={searchTerm}
+                            onChange={event =>
+                                setSearchTerm(event.target.value)
+                            }
+                        />
+                    </div>
+                </Search>
+                <Search>
+                    <Error>
+                        {parseApolloErrors(getItemsError).map(error => (
+                            <div key={error.message || error}>
+                                {error.message || error}
                             </div>
-                            <ItemActions>
-                                <Button>Edit</Button>
-                                <Button
-                                    onClick={() =>
-                                        deleteItem({ variables: { id } })
-                                    }
-                                >
-                                    Delete
-                                </Button>
-                            </ItemActions>
-                        </Item>
-                    );
-                })}
-            </Results>
+                        ))}
+                    </Error>
+                    <div>
+                        {filteredItems.length}{' '}
+                        {filteredItems.length < 2 ? 'item' : 'items'}
+                    </div>
+                </Search>
+                {getItemsLoading ? (
+                    <Loading>Loading...</Loading>
+                ) : searchTerm &&
+                  filteredItems &&
+                  filteredItems.length === 0 ? (
+                    <NothingFound>
+                        No item found for "{searchTerm}". 😥
+                    </NothingFound>
+                ) : items && items.length > 0 ? (
+                    <Fragment>
+                        <Results>
+                            <Error>
+                                {parseApolloErrors(deleteItemError).map(
+                                    error => (
+                                        <div key={error.message || error}>
+                                            {error.message || error}
+                                        </div>
+                                    )
+                                )}
+                            </Error>
+                            {filteredItems.map(item => (
+                                <Item
+                                    key={item.id}
+                                    item={item}
+                                    addItem={addItem}
+                                    deleteItem={deleteItem}
+                                />
+                            ))}
+                        </Results>
+                    </Fragment>
+                ) : getItemsError ? null : (
+                    <Fragment>
+                        <Error>
+                            {parseApolloErrors(addStarterItemsError).map(
+                                error => (
+                                    <div key={error.message || error}>
+                                        {error.message || error}
+                                    </div>
+                                )
+                            )}
+                        </Error>
+                        <StarterPrompt>
+                            <p>
+                                Looks like you don't have any items in your
+                                inventory yet. Would you like to start with some
+                                typical office items?
+                            </p>
+                            <Button onClick={addStarterItems}>
+                                Create starter items
+                            </Button>
+                        </StarterPrompt>
+                    </Fragment>
+                )}
+            </ItemContainer>
         </Fragment>
     );
 };
 
-const AddItem = styled.section``;
-
-const Error = styled.div`
-    color: orange;
+const Greetings = styled.section`
+    padding-bottom: 2rem;
+    text-align: center;
+    min-height: 3rem;
 `;
+
+const SectionSeparator = styled.section`
+    border-top: 5px solid rgb(80, 80, 80);
+    padding-top: 2rem;
+`;
+
+const AddItem = styled(SectionSeparator)``;
 
 const AddForm = styled.form`
     display: flex;
@@ -242,47 +323,35 @@ const AddLabel = styled.label`
     font-size: 110%;
 `;
 
-const AddInput = styled.input`
-    padding: 0.3rem;
-    font-size: 110%;
+const ItemContainer = styled(SectionSeparator)`
+    padding-bottom: 8rem;
 `;
 
-const AddQuantityInput = styled(AddInput)`
-    width: 5rem;
+const StarterPrompt = styled.div`
+    text-align: center;
 `;
 
-const Button = styled.button`
-    font-size: 120%;
+const Loading = styled.div`
+    text-align: center;
+    padding: 2rem;
 `;
 
-const Search = styled.section`
+const NothingFound = styled(Loading)``;
+
+const Search = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 5px solid rgb(80, 80, 80);
-    padding-top: 2rem;
 `;
 
 const Title = styled.h2`
     margin: 0;
 `;
 
-const SearchInput = styled.input`
+const SearchInput = styled(TextInput)`
     padding: 0.3rem;
     margin-left: 0.5rem;
     font-size: 110%;
 `;
 
 const Results = styled.ul``;
-
-const Item = styled.li`
-    display: flex;
-    justify-content: space-between;
-`;
-
-const ItemActions = styled.div`
-    display: flex;
-    & > * {
-        margin: 0.2rem;
-    }
-`;
