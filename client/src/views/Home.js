@@ -7,6 +7,7 @@ import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import NumberInput from '../components/NumberInput';
 import Error from '../components/Error';
+import Dropdown from '../components/Dropdown';
 
 const GET_USER = gql`
     query getUser {
@@ -59,16 +60,33 @@ const DEFAULT_ADD_ITEM = {
     quantity: 0
 };
 
+const SORT_OPTIONS = [
+    {
+        text: 'Updated',
+        value: 'updatedAt'
+    },
+    {
+        text: 'Created',
+        value: 'createdAt'
+    },
+    {
+        text: 'Name',
+        value: 'name'
+    },
+    {
+        text: 'Quantity',
+        value: 'quantity'
+    }
+];
+
 export default () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredItems, setFilteredItems] = useState([]);
+    const [sortBy, setSortBy] = useState('updatedAt');
+    const [sortOrderModifier, setSortOrderModifier] = useState(1);
     const [itemToAdd, setItemToAdd] = useState({ ...DEFAULT_ADD_ITEM });
 
-    const {
-        loading: getUserLoading,
-        error: getUserError,
-        data: { user } = {}
-    } = useQuery(GET_USER);
+    const { error: getUserError, data: { user } = {} } = useQuery(GET_USER);
 
     const {
         loading: getItemsLoading,
@@ -129,14 +147,26 @@ export default () => {
                 );
             }
 
-            const updatedItems = [...searchedItems].sort(
-                ({ updatedAt: updatedAtA }, { updatedAt: updatedAtB }) => {
-                    return updatedAtB - updatedAtA;
+            const updatedItems = [...searchedItems].sort((a, b) => {
+                let propertyA = a[sortBy];
+                let propertyB = b[sortBy];
+
+                if (sortBy === 'name') {
+                    propertyA = propertyA.toLowerCase();
+                    propertyB = propertyB.toLowerCase();
                 }
-            );
+
+                if (propertyA > propertyB) {
+                    return 1 * sortOrderModifier;
+                } else if (propertyA < propertyB) {
+                    return -1 * sortOrderModifier;
+                }
+
+                return 0;
+            });
             setFilteredItems(updatedItems);
         }
-    }, [items, searchTerm]);
+    }, [items, searchTerm, sortBy, sortOrderModifier]);
 
     const userGreetingsComponent = useMemo(
         () => (
@@ -206,17 +236,34 @@ export default () => {
         () => (
             <Search>
                 <Title>Your inventory</Title>
-                <div>
-                    🔎{' '}
-                    <SearchInput
-                        placeholder="Search"
-                        value={searchTerm}
-                        onChange={event => setSearchTerm(event.target.value)}
+                <FilterFunctionalities>
+                    <div>
+                        🔎{' '}
+                        <SearchInput
+                            placeholder="Search"
+                            value={searchTerm}
+                            onChange={event =>
+                                setSearchTerm(event.target.value)
+                            }
+                        />
+                    </div>
+                    <Sort>Sort:</Sort>
+                    <Dropdown
+                        value={sortBy}
+                        options={SORT_OPTIONS}
+                        onChange={event => setSortBy(event.target.value)}
                     />
-                </div>
+                    <SortOrder
+                        onClick={() =>
+                            setSortOrderModifier(sortOrderModifier * -1)
+                        }
+                    >
+                        {sortOrderModifier === 1 ? '▼' : '▲'}
+                    </SortOrder>
+                </FilterFunctionalities>
             </Search>
         ),
-        [searchTerm]
+        [searchTerm, sortBy, sortOrderModifier]
     );
 
     const itemsInfoComponent = useMemo(
@@ -276,7 +323,8 @@ export default () => {
             items,
             getItemsError,
             addStarterItemsError,
-            deleteItemError
+            deleteItemError,
+            sortBy
         ]
     );
 
@@ -346,6 +394,19 @@ const Search = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+`;
+
+const FilterFunctionalities = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+const Sort = styled.div`
+    margin: 0.5rem;
+`;
+
+const SortOrder = styled(Button)`
+    margin-left: 0.5rem;
 `;
 
 const Title = styled.h2`
