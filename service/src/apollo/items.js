@@ -89,7 +89,27 @@ export async function addStarterItems() {
             quantity: 34
         },
         {
-            name: 'Photocopier',
+            name: 'Fan',
+            quantity: 8
+        },
+        {
+            name: 'Water cooler',
+            quantity: 2
+        },
+        {
+            name: 'Printer',
+            quantity: 3
+        },
+        {
+            name: '5lb coffee bags',
+            quantity: 2
+        },
+        {
+            name: 'Water glasses',
+            quantity: 16
+        },
+        {
+            name: 'TV monitor',
             quantity: 3
         }
     ];
