@@ -1,8 +1,7 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
-import { parseApolloErrors } from '../util';
 import Item from '../components/Item';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
@@ -139,31 +138,26 @@ export default () => {
         }
     }, [items, searchTerm]);
 
-    return (
-        <Fragment>
+    const userGreetingsComponent = useMemo(
+        () => (
             <Greetings>
                 {getUserError ? (
                     <Title>Welcome back!</Title>
                 ) : user ? (
                     <Title>Welcome back, {user.firstName}</Title>
                 ) : null}
-                <Error>
-                    {parseApolloErrors(getUserError).map(error => (
-                        <div key={error.message || error}>
-                            {error.message || error}
-                        </div>
-                    ))}
-                </Error>
+
+                <Error error={getUserError} />
             </Greetings>
+        ),
+        [user, getUserError]
+    );
+
+    const addItemComponent = useMemo(
+        () => (
             <AddItem>
                 <Title>Add item</Title>
-                <Error>
-                    {parseApolloErrors(addItemError).map(error => (
-                        <div key={error.message || error}>
-                            {error.message || error}
-                        </div>
-                    ))}
-                </Error>
+                <Error error={addItemError} />
                 <AddForm
                     onSubmit={event => {
                         event.preventDefault();
@@ -204,86 +198,96 @@ export default () => {
                     </AddFormColumn>
                 </AddForm>
             </AddItem>
-            <ItemContainer>
-                <Search>
-                    <Title>Your inventory</Title>
-                    <div>
-                        🔎{' '}
-                        <SearchInput
-                            placeholder="Search"
-                            value={searchTerm}
-                            onChange={event =>
-                                setSearchTerm(event.target.value)
-                            }
-                        />
-                    </div>
-                </Search>
-                <Search>
-                    <Error>
-                        {parseApolloErrors(getItemsError).map(error => (
-                            <div key={error.message || error}>
-                                {error.message || error}
-                            </div>
+        ),
+        [itemToAdd, addItemError]
+    );
+
+    const searchComponent = useMemo(
+        () => (
+            <Search>
+                <Title>Your inventory</Title>
+                <div>
+                    🔎{' '}
+                    <SearchInput
+                        placeholder="Search"
+                        value={searchTerm}
+                        onChange={event => setSearchTerm(event.target.value)}
+                    />
+                </div>
+            </Search>
+        ),
+        [searchTerm]
+    );
+
+    const itemsInfoComponent = useMemo(
+        () => (
+            <Search>
+                {getItemsError ? <Error error={getItemsError} /> : <div />}
+                <div>
+                    {filteredItems.length}{' '}
+                    {filteredItems.length < 2 ? 'item' : 'items'}
+                </div>
+            </Search>
+        ),
+        [getItemsError, filteredItems]
+    );
+
+    const itemsListComponent = useMemo(
+        () =>
+            getItemsLoading ? (
+                <Loading>Loading...</Loading>
+            ) : searchTerm && filteredItems && filteredItems.length === 0 ? (
+                <NothingFound>
+                    No item found for "{searchTerm}". 😥
+                </NothingFound>
+            ) : items && items.length > 0 ? (
+                <Fragment>
+                    <Results>
+                        <Error error={deleteItemError} />
+                        {filteredItems.map(item => (
+                            <Item
+                                key={item.id}
+                                item={item}
+                                addItem={addItem}
+                                deleteItem={deleteItem}
+                            />
                         ))}
-                    </Error>
-                    <div>
-                        {filteredItems.length}{' '}
-                        {filteredItems.length < 2 ? 'item' : 'items'}
-                    </div>
-                </Search>
-                {getItemsLoading ? (
-                    <Loading>Loading...</Loading>
-                ) : searchTerm &&
-                  filteredItems &&
-                  filteredItems.length === 0 ? (
-                    <NothingFound>
-                        No item found for "{searchTerm}". 😥
-                    </NothingFound>
-                ) : items && items.length > 0 ? (
-                    <Fragment>
-                        <Results>
-                            <Error>
-                                {parseApolloErrors(deleteItemError).map(
-                                    error => (
-                                        <div key={error.message || error}>
-                                            {error.message || error}
-                                        </div>
-                                    )
-                                )}
-                            </Error>
-                            {filteredItems.map(item => (
-                                <Item
-                                    key={item.id}
-                                    item={item}
-                                    addItem={addItem}
-                                    deleteItem={deleteItem}
-                                />
-                            ))}
-                        </Results>
-                    </Fragment>
-                ) : getItemsError ? null : (
-                    <Fragment>
-                        <Error>
-                            {parseApolloErrors(addStarterItemsError).map(
-                                error => (
-                                    <div key={error.message || error}>
-                                        {error.message || error}
-                                    </div>
-                                )
-                            )}
-                        </Error>
-                        <StarterPrompt>
-                            <p>
-                                Looks like you don't have any items in your
-                                inventory yet. Would you like to start with some
-                                typical office items?
-                            </p>
-                            <Button onClick={addStarterItems}>
-                                Create starter items
-                            </Button>
-                        </StarterPrompt>
-                    </Fragment>
-                )}
+                    </Results>
+                </Fragment>
+            ) : getItemsError ? null : (
+                <Fragment>
+                    <Error error={addStarterItemsError} />
+                    <StarterPrompt>
+                        <p>
+                            Looks like you don't have any items in your
+                            inventory yet. Would you like to start with some
+                            typical office items?
+                        </p>
+                        <Button onClick={addStarterItems}>
+                            Create starter items
+                        </Button>
+                    </StarterPrompt>
+                </Fragment>
+            ),
+        [
+            getItemsLoading,
+            searchTerm,
+            filteredItems,
+            items,
+            getItemsError,
+            addStarterItemsError,
+            deleteItemError
+        ]
+    );
+
+    return (
+        <Fragment>
+            {userGreetingsComponent}
+            {addItemComponent}
+            <ItemContainer>
+                {searchComponent}
+                {itemsInfoComponent}
+                {itemsListComponent}
             </ItemContainer>
         </Fragment>
     );

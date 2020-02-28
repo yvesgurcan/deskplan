@@ -36,8 +36,9 @@ export async function updateItem(_, item) {
 
 export async function deleteItem(_, { id }) {
     connect();
-    const result = await ItemModel.findOneAndRemove(id);
+    const result = await ItemModel.findOneAndRemove({ _id: id });
     close();
+    console.log({ result, id });
     const { _id } = result;
     return _id;
 }
