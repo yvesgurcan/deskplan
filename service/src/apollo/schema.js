@@ -2,7 +2,7 @@ import { gql } from 'apollo-server';
 
 const ItemFields = `
     name: String!
-    count: Int!
+    quantity: Int
 `;
 
 export default gql`
@@ -27,8 +27,8 @@ export default gql`
     }
 
     type Mutation {
-        createItems(items: [ItemInput!]!): [Item]
+        addItem(${ItemFields}): Item
         updateItems(items: [UpdateItemInput!]!): [Item]
-        deleteItems(itemIds: [ID!]!): [String]
+        deleteItem(id: ID!): ID
     }
 `;

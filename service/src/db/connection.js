@@ -1,12 +1,11 @@
+import { ApolloError } from 'apollo-server';
 import mongoose from 'mongoose';
-import updateVersioningPlugin from 'mongoose-update-versioning';
 
 // use the findAndModify() function from MongoDB under the hood instead of the findOneAndUpdate() function from Mongoose;
 mongoose.set('useFindAndModify', true);
-mongoose.plugin(updateVersioningPlugin);
 
-export function connect() {
-    mongoose.connect('mongodb://localhost:27017/deskplan', {
+export async function connect() {
+    await mongoose.connect('mongodb://localhost:27017/deskplan', {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
@@ -16,4 +15,20 @@ export function connect() {
 export function close(result) {
     mongoose.connection.close();
     return result;
+}
+
+export function parseMongooseErrors(error) {
+    if (error.errors) {
+        const messages = Object.keys(error.errors).map(key => {
+            const { message, path } = error.errors[key];
+            return { message, path };
+        });
+        throw new ApolloError('ValidationError', messages);
+    }
+
+    if (error) {
+        return error;
+    }
+
+    return null;
 }

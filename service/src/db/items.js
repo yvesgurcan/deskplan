@@ -2,10 +2,14 @@ import mongoose from 'mongoose';
 
 const itemSchema = new mongoose.Schema(
     {
-        name: String,
+        name: { type: String, required: [true, 'Item name is required'] },
+        quantity: {
+            type: Number,
+            required: [true, 'Quantity is required.'],
+            integer: true
+        },
         type: String,
         location: String,
-        count: Number,
         assignedTo: String,
         orderStatus: String
     },

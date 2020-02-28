@@ -3,6 +3,7 @@
     "plugins": [
         "@babel/plugin-proposal-class-properties",
         "babel-plugin-styled-components",
-        "@babel/transform-runtime"
+        "@babel/transform-runtime",
+        "@babel/plugin-proposal-optional-chaining"
     ]
 }

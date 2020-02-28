@@ -1,4 +1,4 @@
-import { connect, close } from '../db/connection';
+import { connect, close, parseMongooseErrors } from '../db/connection';
 import ItemModel from '../db/items';
 
 export async function getItems() {
@@ -8,11 +8,15 @@ export async function getItems() {
     return result;
 }
 
-export async function createItems(_, { items }) {
+export async function addItem(_, item) {
     connect();
-    const result = await ItemModel.insertMany(items);
+    try {
+        const result = await ItemModel.create(item);
+        return result;
+    } catch (error) {
+        parseMongooseErrors(error);
+    }
     close();
-    return result;
 }
 
 export async function updateItems(_, { items }) {
@@ -28,10 +32,10 @@ export async function updateItems(_, { items }) {
     return result;
 }
 
-export async function deleteItems(_, { itemIds }) {
+export async function deleteItem(_, { id }) {
     connect();
-    console.log({ itemIds });
-    const result = await ItemModel.deleteMany(itemIds);
+    const result = await ItemModel.findOneAndRemove(id);
     close();
-    return result;
+    const { _id } = result;
+    return _id;
 }
