@@ -1,17 +1,21 @@
 import { connect, close, parseMongooseErrors } from '../db/connection';
 import ItemModel from '../db/items';
 
-export async function getItems(_, parameters) 
-    const { sortBy = 'updatedAt', sortModifier = 1, offset = 0, limit = 0 } = parameters;
-    connect()
+export async function getItems(_, parameters) {
+    const {
+        sortBy = 'updatedAt',
+        sortModifier = 1,
+        offset = 0,
+        limit = 0
+    } = parameters;
+    connect();
     try {
-        const result = await ItemModel
-            .find()
+        const result = await ItemModel.find()
             .sort({ [sortBy]: sortModifier })
             .skip(offset * limit)
             .limit(limit);
         close();
-        return result
+        return result;
     } catch (error) {
         parseMongooseErrors(error);
     }
