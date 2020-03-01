@@ -25,7 +25,6 @@ const App = () => {
             const workerRegistered = await navigator.serviceWorker
                 .getRegistrations()
                 .then(function(reg) {
-                    console.log(reg);
                     return reg.length > 0;
                 });
             setOfflineAccess(workerRegistered || false);
@@ -40,8 +39,6 @@ const App = () => {
 
         getOfflineAccess();
     }, []);
-
-    console.log(offline, offlineAccess);
 
     return (
         <ApolloProvider client={client}>
@@ -140,7 +137,8 @@ const Main = styled.div`
 const setupAndRender = async () => {
     await persistCache({
         cache,
-        storage: window.localStorage
+        storage: window.localStorage,
+        debug: true
     });
     ReactDOM.render(<App />, document.getElementById('app'));
 };
