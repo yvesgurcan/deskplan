@@ -19,6 +19,6 @@ export default ({ error }) => {
     return <ErrorContainer>{listOfErrors}</ErrorContainer>;
 };
 
-const ErrorContainer = styled.div`
+export const ErrorContainer = styled.div`
     color: orange;
 `;

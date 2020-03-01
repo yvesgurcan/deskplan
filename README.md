@@ -8,6 +8,14 @@
 - Service written with Node/Apollo.
 - MongoDB Database
 
+## Features
+
+- Manage your inventory: Create, view, update, and delete items.
+- Search your items by name.
+- Sort your items by date of creation, date of last update, name, or quantity.
+- Duplicate an existing item to create a different one.
+- Access your inventory even if you are offline or experiencing connectivity issues (thanks to Apollo Persistent Cache and Workbox Service Worker).
+
 ## Development
 
 ### Set up
