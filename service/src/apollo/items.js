@@ -2,11 +2,19 @@ import { connect, close, parseMongooseErrors } from '../db/connection';
 import ItemModel from '../db/items';
 
 export async function getItems(_, parameters) 
-    const { sortBy, sortModifier, offset = 0, limit = 0 } = parameters;
-    connect();
-    const result = await ItemModel.find().skip(offset * limit).limit(limit);
-    close();
-    return result;
+    const { sortBy = 'updatedAt', sortModifier = 1, offset = 0, limit = 0 } = parameters;
+    connect()
+    try {
+        const result = await ItemModel
+            .find()
+            .sort({ [sortBy]: sortModifier })
+            .skip(offset * limit)
+            .limit(limit);
+        close();
+        return result
+    } catch (error) {
+        parseMongooseErrors(error);
+    }
 }
 
 export async function addItem(_, item) {
@@ -39,7 +47,6 @@ export async function deleteItem(_, { id }) {
     connect();
     const result = await ItemModel.findOneAndRemove({ _id: id });
     close();
-    console.log({ result, id });
     const { _id } = result;
     return _id;
 }
