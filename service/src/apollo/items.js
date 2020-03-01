@@ -2,9 +2,9 @@ import { connect, close, parseMongooseErrors } from '../db/connection';
 import ItemModel from '../db/items';
 
 export async function getItems(_, parameters) 
-    const { sortBy, sortModifier, offset, limit } = parameters;
+    const { sortBy, sortModifier, offset = 0, limit = 0 } = parameters;
     connect();
-    const result = await ItemModel.find();
+    const result = await ItemModel.find().skip(offset * limit).limit(limit);
     close();
     return result;
 }
