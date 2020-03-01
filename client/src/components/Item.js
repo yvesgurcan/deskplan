@@ -1,37 +1,14 @@
 import React, { Fragment, useState, useMemo } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
 import styled from 'styled-components';
 import DateTime from 'luxon/src/datetime.js';
+
+import { GET_ITEMS, UPDATE_ITEM } from '../queries/items';
+
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import NumberInput from '../components/NumberInput';
 import Error from '../components/Error';
-
-const ItemFields = `
-    id
-    createdAt
-    updatedAt
-    name
-    quantity
-`;
-
-const GET_ITEMS = gql`
-    query getItems {
-        items {
-            ${ItemFields}
-        }
-    }
-`;
-
-const UPDATE_ITEM = gql`
-    mutation updateItem($id: ID!, $name: String!, $quantity: Int) {
-        updateItem(id: $id, name: $name, quantity: $quantity) {
-            id
-            ${ItemFields}
-        }
-    }
-`;
 
 export default ({ item, addItem, deleteItem }) => {
     const [editMode, setEditMode] = useState(false);

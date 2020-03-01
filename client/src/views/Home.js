@@ -1,59 +1,21 @@
 import React, { Fragment, useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
+
+import { GET_USER } from '../queries/users';
+import {
+    GET_ITEMS,
+    ADD_ITEM,
+    ADD_STARTER_ITEMS,
+    DELETE_ITEM
+} from '../queries/items';
+
 import Item from '../components/Item';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import NumberInput from '../components/NumberInput';
 import Error from '../components/Error';
 import Dropdown from '../components/Dropdown';
-
-const GET_USER = gql`
-    query getUser {
-        user {
-            firstName
-        }
-    }
-`;
-
-const ItemFields = `
-    id
-    createdAt
-    updatedAt
-    name
-    quantity
-`;
-
-const GET_ITEMS = gql`
-    query getItems {
-        items {
-            ${ItemFields}
-        }
-    }
-`;
-
-const ADD_ITEM = gql`
-    mutation addItem($name: String!, $quantity: Int) {
-        addItem(name: $name, quantity: $quantity) {
-            ${ItemFields}
-        }
-    }
-`;
-
-const ADD_STARTER_ITEMS = gql`
-    mutation addStarterItems {
-        addStarterItems {
-            ${ItemFields}
-        }
-    }
-`;
-
-const DELETE_ITEM = gql`
-    mutation deleteItem($id: ID!) {
-        deleteItem(id: $id)
-    }
-`;
 
 const DEFAULT_ADD_ITEM = {
     name: '',
