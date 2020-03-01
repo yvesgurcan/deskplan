@@ -1,7 +1,8 @@
 import { connect, close, parseMongooseErrors } from '../db/connection';
 import ItemModel from '../db/items';
 
-export async function getItems() {
+export async function getItems(_, parameters) 
+    const { sortBy, sortModifier, offset, limit } = parameters;
     connect();
     const result = await ItemModel.find();
     close();
