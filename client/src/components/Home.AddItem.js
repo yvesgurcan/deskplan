@@ -71,11 +71,11 @@ export default () => {
 };
 
 const AddForm = styled.form`
+    display: flex;
+    justify-content: center;
     min-width: 100%;
     border-top: 1px solid black;
     background: linear-gradient(rgb(60, 60, 60), rgb(35, 35, 35));
-    display: flex;
-    justify-content: center;
     padding: 1rem;
 `;
 
