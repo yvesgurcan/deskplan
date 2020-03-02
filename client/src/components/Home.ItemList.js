@@ -284,6 +284,7 @@ const SortOrder = styled(Button)`
     margin: 0.25rem;
     margin-left: 0.4rem;
     margin-right: 0.4rem;
+    height: 2.7rem;
 `;
 
 const SearchInput = styled(TextInput)`

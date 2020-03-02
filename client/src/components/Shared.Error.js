@@ -42,6 +42,7 @@ const ErrorContainer = styled.div`
     justify-content: center;
     width: 100%;
     margin: 0.6rem;
+    z-index: 1;
 `;
 
 const ErrorList = styled.div`
