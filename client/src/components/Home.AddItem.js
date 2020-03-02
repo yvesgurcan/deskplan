@@ -11,7 +11,7 @@ import Error from './Shared.Error';
 import FormGroup from './Shared.FormGroup';
 import FormButton from './Shared.FormButton';
 
-export default () => {
+export default ({ offline }) => {
     const [itemToAdd, setItemToAdd] = useState({ ...DEFAULT_ADD_ITEM });
 
     const [addItem, { error }] = useMutation(ADD_ITEM, {
@@ -39,6 +39,7 @@ export default () => {
                 <FormGroup>
                     Name:{' '}
                     <TextInput
+                        disabled={offline}
                         placeholder="Name of item to add"
                         value={itemToAdd.name}
                         onChange={event =>
@@ -52,6 +53,7 @@ export default () => {
                 <FormGroup>
                     Quantity:{' '}
                     <NumberInput
+                        disabled={offline}
                         placeholder="Qty"
                         value={itemToAdd.quantity}
                         onChange={event =>
@@ -62,7 +64,7 @@ export default () => {
                         }
                     />
                 </FormGroup>
-                <AddButton>
+                <AddButton disabled={offline}>
                     <FontAwesomeIcon icon={faSave} />
                 </AddButton>
             </AddForm>
@@ -77,6 +79,7 @@ const AddForm = styled.form`
     border-top: 1px solid black;
     background: linear-gradient(rgb(60, 60, 60), rgb(35, 35, 35));
     padding: 1rem;
+    margin: 0;
 `;
 
 const AddButton = styled(FormButton)`

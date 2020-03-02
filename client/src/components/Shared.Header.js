@@ -2,13 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import OfflineHandling from './Shared.OfflineHandling';
 
-export default () => (
+export default ({ offline, offlineAccess, setOfflineAccess }) => (
     <Header>
         <AppName>
             desk<Accent>plan</Accent>
         </AppName>
-
-        <OfflineHandling />
+        <OfflineHandling
+            offline={offline}
+            offlineAccess={offlineAccess}
+            setOfflineAccess={setOfflineAccess}
+        />
     </Header>
 );
 
