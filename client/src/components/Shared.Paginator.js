@@ -1,11 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faChevronRight,
+    faChevronLeft
+} from '@fortawesome/free-solid-svg-icons';
 import Button from './Shared.Button';
 
 const Controls = ({ data, offset, setOffset, limit }) => (
     <Container>
         <Button disabled={!offset} onClick={() => setOffset(offset - 1)}>
-            Previous
+            <FontAwesomeIcon icon={faChevronLeft} />
         </Button>
         <div>
             Page {offset + 1} of {Math.ceil(data.length / limit)}
@@ -14,7 +19,7 @@ const Controls = ({ data, offset, setOffset, limit }) => (
             disabled={data.length / limit <= offset + 1}
             onClick={() => setOffset(offset + 1)}
         >
-            Next
+            <FontAwesomeIcon icon={faChevronRight} />
         </Button>
     </Container>
 );

@@ -2,6 +2,14 @@ import React, { Fragment, useState, useMemo } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import DateTime from 'luxon/src/datetime.js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faWindowClose,
+    faSave,
+    faPencilAlt,
+    faClone,
+    faTrash
+} from '@fortawesome/free-solid-svg-icons';
 
 import { GET_ITEMS, UPDATE_ITEM } from '../queries/items';
 
@@ -86,7 +94,7 @@ export default ({ item, addItem, deleteItem }) => {
                             setItemToUpdate({ ...item });
                         }}
                     >
-                        Cancel
+                        <FontAwesomeIcon icon={faWindowClose} />
                     </Button>
                 )}
                 {editMode ? (
@@ -98,10 +106,12 @@ export default ({ item, addItem, deleteItem }) => {
                             });
                         }}
                     >
-                        Save
+                        <FontAwesomeIcon icon={faSave} />
                     </Button>
                 ) : (
-                    <Button onClick={() => setEditMode(true)}>Edit</Button>
+                    <Button onClick={() => setEditMode(true)}>
+                        <FontAwesomeIcon icon={faPencilAlt} />
+                    </Button>
                 )}
             </Fragment>
         ),
@@ -120,7 +130,7 @@ export default ({ item, addItem, deleteItem }) => {
                         })
                     }
                 >
-                    Duplicate
+                    <FontAwesomeIcon icon={faClone} />
                 </Button>
                 <Button
                     onClick={() =>
@@ -129,7 +139,7 @@ export default ({ item, addItem, deleteItem }) => {
                         })
                     }
                 >
-                    Delete
+                    <FontAwesomeIcon icon={faTrash} />
                 </Button>
             </Fragment>
         ),

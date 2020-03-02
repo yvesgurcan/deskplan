@@ -1,6 +1,14 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { useQuery, useMutation } from '@apollo/react-hooks';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faSearch,
+    faArrowDown,
+    faArrowUp,
+    faPlus
+} from '@fortawesome/free-solid-svg-icons';
+
 import {
     GET_ITEMS,
     ADD_ITEM,
@@ -131,45 +139,54 @@ export default () => {
     const searchComponent = useMemo(
         () => (
             <FilterFunctionalities>
-                <InsideFilter>
-                    <div>
-                        🔎{' '}
-                        <SearchInput
-                            placeholder="Search"
-                            value={searchTerm}
-                            onChange={event =>
-                                setSearchTerm(event.target.value)
+                <FilterContainer>
+                    <InsideFilter>
+                        <div>
+                            <FontAwesomeIcon icon={faSearch} />{' '}
+                            <SearchInput
+                                placeholder="Search"
+                                value={searchTerm}
+                                onChange={event =>
+                                    setSearchTerm(event.target.value)
+                                }
+                            />
+                        </div>
+                        <div>
+                            Sort:{' '}
+                            <Dropdown
+                                value={sortBy}
+                                options={SORT_OPTIONS}
+                                onChange={event =>
+                                    setSortBy(event.target.value)
+                                }
+                            />
+                        </div>
+                        <div>
+                            Per page:{' '}
+                            <Dropdown
+                                value={limit}
+                                options={LIMIT_OPTIONS}
+                                onChange={event => {
+                                    setLimit(parseInt(event.target.value));
+                                }}
+                            />
+                        </div>
+                        <SortOrder
+                            onClick={() =>
+                                setSortOrderModifier(sortOrderModifier * -1)
                             }
-                        />
-                    </div>
-                    <div>
-                        Sort:{' '}
-                        <Dropdown
-                            value={sortBy}
-                            options={SORT_OPTIONS}
-                            onChange={event => setSortBy(event.target.value)}
-                        />
-                    </div>
-                    <div>
-                        Per page:{' '}
-                        <Dropdown
-                            value={limit}
-                            options={LIMIT_OPTIONS}
-                            onChange={event => {
-                                console.log(parseInt(event.target.value));
-                                setLimit(parseInt(event.target.value));
-                            }}
-                        />
-                    </div>
-                    <SortOrder
-                        onClick={() =>
-                            setSortOrderModifier(sortOrderModifier * -1)
-                        }
-                    >
-                        {sortOrderModifier === 1 ? '▼' : '▲'}
-                    </SortOrder>
-                    <SortOrder onClick={() => setOpenModal(true)}>+</SortOrder>
-                </InsideFilter>
+                        >
+                            {sortOrderModifier === 1 ? (
+                                <FontAwesomeIcon icon={faArrowDown} />
+                            ) : (
+                                <FontAwesomeIcon icon={faArrowUp} />
+                            )}
+                        </SortOrder>
+                        <SortOrder onClick={() => setOpenModal(true)}>
+                            <FontAwesomeIcon icon={faPlus} />
+                        </SortOrder>
+                    </InsideFilter>
+                </FilterContainer>
             </FilterFunctionalities>
         ),
         [searchTerm, sortBy, sortOrderModifier, limit, openModal]
@@ -250,10 +267,19 @@ const InsideFilter = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
+    width: 100%;
+    max-width: 760px;
+`;
+
+const FilterContainer = styled.div`
+    display: flex;
+    justify-content: center;
 `;
 
 const ItemCount = styled.div`
     text-align: right;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 `;
 
 const SortOrder = styled(Button)`
@@ -282,7 +308,9 @@ const ItemContainer = styled.section`
     padding-bottom: 8rem;
     display: flex;
     justify-content: center;
-    max-width: 1200px;
 `;
 
-const Container = styled.div``;
+const Container = styled.div`
+    width: 100%;
+    max-width: 1200px;
+`;
