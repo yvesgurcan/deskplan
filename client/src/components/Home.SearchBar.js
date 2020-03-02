@@ -98,31 +98,31 @@ export default ({
     );
 
     return (
-        <SearchBarContainer>
-            <SearchBar>
-                {searchComponent}
-                {sortByComponent}
+        <SearchBar>
+            {searchComponent}
+            {sortByComponent}
+            <SecondaryFilters>
                 {limitComponent}
                 {sortOrderComponent}
                 {openAddComponent}
-            </SearchBar>
-        </SearchBarContainer>
+            </SecondaryFilters>
+        </SearchBar>
     );
 };
-
-const SearchBarContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    background: linear-gradient(rgb(85, 85, 85), rgb(60, 60, 60));
-    border-top: 1px solid black;
-`;
 
 const SearchBar = styled.div`
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    max-width: 840px;
+    max-width: 100%;
+    background: linear-gradient(rgb(85, 85, 85), rgb(60, 60, 60));
     padding: 1rem;
+    border-top: 1px solid black;
+`;
+
+const SecondaryFilters = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
