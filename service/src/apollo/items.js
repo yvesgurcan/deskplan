@@ -4,14 +4,14 @@ import ItemModel from '../db/items';
 export async function getItems(_, parameters) {
     const {
         sortBy = 'updatedAt',
-        sortModifier = 1,
+        sortOrderModifier = 1,
         offset = 0,
         limit = 0
     } = parameters;
     connect();
     try {
         const result = await ItemModel.find()
-            .sort({ [sortBy]: sortModifier })
+            .sort({ [sortBy]: sortOrderModifier })
             .skip(offset * limit)
             .limit(limit);
         close();
