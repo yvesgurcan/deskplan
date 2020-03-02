@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useMutation } from '@apollo/react-hooks';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSave } from '@fortawesome/free-solid-svg-icons';
 
 import { GET_ITEMS, ADD_ITEM } from '../queries/items';
 
@@ -30,58 +31,62 @@ export default () => {
         }
     });
 
-    const node = (
-        <AddItem>
-            <Title>Add item</Title>
+    return (
+        <Container>
             <Error error={addItemError} />
-            <AddForm
-                onSubmit={event => {
-                    event.preventDefault();
-                    const quantity = Number(itemToAdd.quantity);
-                    addItem({ variables: { ...itemToAdd, quantity } });
-                }}
-            >
-                <AddFormColumn>
-                    <AddFormGroup>
-                        <AddLabel>Name:</AddLabel>
-                        <TextInput
-                            value={itemToAdd.name}
-                            placeholder="Name of item"
-                            onChange={event =>
-                                setItemToAdd({
-                                    ...itemToAdd,
-                                    name: event.target.value
-                                })
-                            }
-                        />
-                    </AddFormGroup>
-                    <AddFormGroup>
-                        <AddLabel>Quantity:</AddLabel>
-                        <NumberInput
-                            value={itemToAdd.quantity}
-                            placeholder="Qty"
-                            onChange={event =>
-                                setItemToAdd({
-                                    ...itemToAdd,
-                                    quantity: event.target.value
-                                })
-                            }
-                        />
-                    </AddFormGroup>
-                    <AddFormGroup>
-                        <Button>Submit</Button>
-                    </AddFormGroup>
-                </AddFormColumn>
-            </AddForm>
-        </AddItem>
+            <AddItem>
+                <AddForm
+                    onSubmit={event => {
+                        event.preventDefault();
+                        const quantity = Number(itemToAdd.quantity);
+                        addItem({ variables: { ...itemToAdd, quantity } });
+                    }}
+                >
+                    <AddFormColumn>
+                        <AddFormGroup>
+                            <Title>Add item</Title>
+                        </AddFormGroup>
+                        <AddFormGroup>
+                            <AddLabel>Name:</AddLabel>
+                            <TextInput
+                                value={itemToAdd.name}
+                                placeholder="Name of item"
+                                onChange={event =>
+                                    setItemToAdd({
+                                        ...itemToAdd,
+                                        name: event.target.value
+                                    })
+                                }
+                            />
+                        </AddFormGroup>
+                        <AddFormGroup>
+                            <AddLabel>Quantity:</AddLabel>
+                            <NumberInput
+                                value={itemToAdd.quantity}
+                                placeholder="Qty"
+                                onChange={event =>
+                                    setItemToAdd({
+                                        ...itemToAdd,
+                                        quantity: event.target.value
+                                    })
+                                }
+                            />
+                        </AddFormGroup>
+                        <AddFormGroup>
+                            <AddButton>
+                                <FontAwesomeIcon icon={faSave} />
+                            </AddButton>
+                        </AddFormGroup>
+                    </AddFormColumn>
+                </AddForm>
+            </AddItem>
+        </Container>
     );
-
-    const mount = document.getElementById('modal');
-    return createPortal(node, mount);
 };
 
 const Title = styled.h2`
     margin: 0;
+    display: inline;
 `;
 
 const AddForm = styled.form`
@@ -91,13 +96,12 @@ const AddForm = styled.form`
 `;
 
 const AddFormColumn = styled.div`
-    padding: 1rem;
     display: flex;
     flex-wrap: wrap;
 `;
 
 const AddFormGroup = styled.div`
-    margin-right: 5rem;
+    margin-right: 4rem;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
 `;
@@ -109,4 +113,18 @@ const AddLabel = styled.label`
 
 const AddItem = styled.section`
     padding: 1rem;
+    max-width: 1000px;
+`;
+
+const AddButton = styled(Button)`
+    margin-left: 2rem;
+    margin-top: 0.35rem;
+`;
+
+const Container = styled.div`
+    min-width: 100%;
+    border-top: 1px solid black;
+    background: linear-gradient(rgb(60, 60, 60), rgb(35, 35, 35));
+    display: flex;
+    justify-content: center;
 `;

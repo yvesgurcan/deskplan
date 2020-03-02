@@ -9,18 +9,23 @@ import Button from './Shared.Button';
 
 const Controls = ({ data, offset, setOffset, limit }) => (
     <Container>
-        <Button disabled={!offset} onClick={() => setOffset(offset - 1)}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-        </Button>
+        {offset ? (
+            <Button onClick={() => setOffset(offset - 1)}>
+                <FontAwesomeIcon icon={faChevronLeft} />
+            </Button>
+        ) : (
+            <div />
+        )}
         <div>
             Page {offset + 1} of {Math.ceil(data.length / limit)}
         </div>
-        <Button
-            disabled={data.length / limit <= offset + 1}
-            onClick={() => setOffset(offset + 1)}
-        >
-            <FontAwesomeIcon icon={faChevronRight} />
-        </Button>
+        {data.length / limit >= offset + 1 ? (
+            <Button onClick={() => setOffset(offset + 1)}>
+                <FontAwesomeIcon icon={faChevronRight} />
+            </Button>
+        ) : (
+            <div />
+        )}
     </Container>
 );
 

@@ -6,7 +6,8 @@ import {
     faSearch,
     faArrowDown,
     faArrowUp,
-    faPlus
+    faPlus,
+    faMinus
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -43,7 +44,7 @@ const SORT_OPTIONS = [
     }
 ];
 
-const LIMIT_OPTIONS = [10, 25, 50, 75];
+const LIMIT_OPTIONS = [10, 20, 30, 40, 50, 60, 70];
 
 export default () => {
     const [openModal, setOpenModal] = useState(false);
@@ -141,7 +142,7 @@ export default () => {
             <FilterFunctionalities>
                 <FilterContainer>
                     <InsideFilter>
-                        <div>
+                        <FilterGroup>
                             <FontAwesomeIcon icon={faSearch} />{' '}
                             <SearchInput
                                 placeholder="Search"
@@ -150,8 +151,8 @@ export default () => {
                                     setSearchTerm(event.target.value)
                                 }
                             />
-                        </div>
-                        <div>
+                        </FilterGroup>
+                        <FilterGroup>
                             Sort:{' '}
                             <Dropdown
                                 value={sortBy}
@@ -160,8 +161,8 @@ export default () => {
                                     setSortBy(event.target.value)
                                 }
                             />
-                        </div>
-                        <div>
+                        </FilterGroup>
+                        <FilterGroup>
                             Per page:{' '}
                             <Dropdown
                                 value={limit}
@@ -170,7 +171,7 @@ export default () => {
                                     setLimit(parseInt(event.target.value));
                                 }}
                             />
-                        </div>
+                        </FilterGroup>
                         <SortOrder
                             onClick={() =>
                                 setSortOrderModifier(sortOrderModifier * -1)
@@ -182,8 +183,12 @@ export default () => {
                                 <FontAwesomeIcon icon={faArrowUp} />
                             )}
                         </SortOrder>
-                        <SortOrder onClick={() => setOpenModal(true)}>
-                            <FontAwesomeIcon icon={faPlus} />
+                        <SortOrder onClick={() => setOpenModal(!openModal)}>
+                            {openModal ? (
+                                <FontAwesomeIcon icon={faMinus} />
+                            ) : (
+                                <FontAwesomeIcon icon={faPlus} />
+                            )}
                         </SortOrder>
                     </InsideFilter>
                 </FilterContainer>
@@ -194,8 +199,8 @@ export default () => {
 
     return (
         <Fragment>
-            {openModal ? <AddItem /> : null}
             {searchComponent}
+            {openModal ? <AddItem /> : null}
             <ItemContainer>
                 <Container>
                     <ItemCount>
@@ -264,11 +269,11 @@ const FilterFunctionalities = styled.div`
 const InsideFilter = styled.div`
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 1rem;
     width: 100%;
-    max-width: 760px;
+    max-width: 840px;
 `;
 
 const FilterContainer = styled.div`
@@ -278,12 +283,20 @@ const FilterContainer = styled.div`
 
 const ItemCount = styled.div`
     text-align: right;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+`;
+
+const FilterGroup = styled.div`
+    margin: 0.25rem;
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
 `;
 
 const SortOrder = styled(Button)`
-    margin-left: 0.5rem;
+    margin: 0.25rem;
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
 `;
 
 const SearchInput = styled(TextInput)`
@@ -313,4 +326,6 @@ const ItemContainer = styled.section`
 const Container = styled.div`
     width: 100%;
     max-width: 1200px;
+    padding-left: 1rem;
+    padding-right: 1rem;
 `;
