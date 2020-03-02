@@ -27,7 +27,7 @@ export default gql`
     }
 
     type Query {
-        items: [Item]
+        items(sortBy: String!, sortOrderModifier: Int!, offset: Int!, limit: Int!): [Item]
         user: User
     }
 
