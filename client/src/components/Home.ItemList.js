@@ -108,10 +108,13 @@ export default () => {
                     propertyB = propertyB.toLowerCase();
                 }
 
+                const dateSortOrderModifier =
+                    sortBy === 'updatedAt' || sortBy === 'createdAt' ? -1 : 1;
+
                 if (propertyA > propertyB) {
-                    return 1 * sortOrderModifier;
+                    return 1 * sortOrderModifier * dateSortOrderModifier;
                 } else if (propertyA < propertyB) {
-                    return -1 * sortOrderModifier;
+                    return -1 * sortOrderModifier * dateSortOrderModifier;
                 }
 
                 return 0;
