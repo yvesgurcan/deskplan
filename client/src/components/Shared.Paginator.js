@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from './Shared.Button';
 
-const Controls = ({ data, offset = 0, setOffset, limit = 50 }) => (
+const Controls = ({ data, offset, setOffset, limit }) => (
     <Container>
         <Button disabled={!offset} onClick={() => setOffset(offset - 1)}>
             Previous
@@ -19,7 +19,7 @@ const Controls = ({ data, offset = 0, setOffset, limit = 50 }) => (
     </Container>
 );
 
-const sliceData = ({ data, offset = 0, limit = 50 }) =>
+const sliceData = ({ data, offset, limit }) =>
     data.slice(offset * limit, (offset + 1) * limit);
 
 export default ({ children, ...props }) => (

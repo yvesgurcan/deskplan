@@ -3,9 +3,9 @@ import styled from 'styled-components';
 
 export default ({ options, ...props }) => (
     <Dropdown {...props}>
-        {options.map(({ value, text }) => (
-            <Option key={value} value={value}>
-                {text}
+        {options.map(option => (
+            <Option key={option.value || option} value={option.value || option}>
+                {option.text || option.value || option}
             </Option>
         ))}
     </Dropdown>

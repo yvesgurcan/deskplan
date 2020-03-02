@@ -34,12 +34,15 @@ const SORT_OPTIONS = [
     }
 ];
 
+const LIMIT_OPTIONS = [10, 25, 50, 75];
+
 export default () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredItems, setFilteredItems] = useState([]);
     const [sortBy, setSortBy] = useState('updatedAt');
     const [sortOrderModifier, setSortOrderModifier] = useState(1);
     const [offset, setOffset] = useState(0);
+    const [limit, setLimit] = useState(50);
 
     const { loading, error, data: { items = [] } = {} } = useQuery(GET_ITEMS, {
         fetchPolicy: 'cache-and-network'
@@ -144,6 +147,15 @@ export default () => {
                         options={SORT_OPTIONS}
                         onChange={event => setSortBy(event.target.value)}
                     />
+                    <Sort>Per page:</Sort>
+                    <Dropdown
+                        value={limit}
+                        options={LIMIT_OPTIONS}
+                        onChange={event => {
+                            console.log(parseInt(event.target.value));
+                            setLimit(parseInt(event.target.value));
+                        }}
+                    />
                     <SortOrder
                         onClick={() =>
                             setSortOrderModifier(sortOrderModifier * -1)
@@ -154,7 +166,7 @@ export default () => {
                 </FilterFunctionalities>
             </Search>
         ),
-        [searchTerm, sortBy, sortOrderModifier]
+        [searchTerm, sortBy, sortOrderModifier, limit]
     );
 
     return (
@@ -178,6 +190,7 @@ export default () => {
                     data={filteredItems}
                     offset={offset}
                     setOffset={setOffset}
+                    limit={limit}
                 >
                     {slicedItems => (
                         <Results>
