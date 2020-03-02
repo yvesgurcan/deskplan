@@ -19,7 +19,7 @@ export const SORT_OPTIONS = [
     }
 ];
 
-export const LIMIT_OPTIONS = [10, 20, 30, 40, 50, 60, 70];
+export const LIMIT_OPTIONS = [10, 20, 30, 40, 50];
 
 export const DEFAULT_ADD_ITEM = {
     name: '',

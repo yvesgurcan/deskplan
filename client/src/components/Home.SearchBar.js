@@ -24,7 +24,8 @@ export default ({
     openAddForm,
     setOpenAddForm,
     limit,
-    setLimit
+    setLimit,
+    offline
 }) => {
     const searchComponent = useMemo(
         () => (
@@ -86,7 +87,10 @@ export default ({
 
     const openAddComponent = useMemo(
         () => (
-            <FormButton onClick={() => setOpenAddForm(!openAddForm)}>
+            <FormButton
+                disabled={offline}
+                onClick={() => setOpenAddForm(!openAddForm)}
+            >
                 {openAddForm ? (
                     <FontAwesomeIcon icon={faMinus} />
                 ) : (
@@ -94,7 +98,7 @@ export default ({
                 )}
             </FormButton>
         ),
-        [openAddForm]
+        [openAddForm, offline]
     );
 
     return (

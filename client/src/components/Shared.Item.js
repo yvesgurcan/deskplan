@@ -18,7 +18,7 @@ import TextInput from './Shared.TextInput';
 import NumberInput from './Shared.NumberInput';
 import Error from './Shared.Error';
 
-export default ({ item, addItem, deleteItem }) => {
+export default ({ item, addItem, deleteItem, offline }) => {
     const [editMode, setEditMode] = useState(false);
     const [itemToUpdate, setItemToUpdate] = useState(item);
 
@@ -46,6 +46,7 @@ export default ({ item, addItem, deleteItem }) => {
         () => (
             <UpdateForm>
                 <TextInput
+                    disabled={offline}
                     value={itemToUpdate.name}
                     placeholder="Name of item"
                     onChange={event =>
@@ -56,6 +57,7 @@ export default ({ item, addItem, deleteItem }) => {
                     }
                 />
                 <NumberInput
+                    disabled={offline}
                     value={itemToUpdate.quantity}
                     placeholder="Qty"
                     onChange={event =>
@@ -68,7 +70,7 @@ export default ({ item, addItem, deleteItem }) => {
                 <Error error={updateItemError} />
             </UpdateForm>
         ),
-        [itemToUpdate, updateItemError]
+        [itemToUpdate, updateItemError, offline]
     );
 
     const updatedAtLocal = useMemo(
@@ -77,12 +79,12 @@ export default ({ item, addItem, deleteItem }) => {
     );
     const viewItemComponent = useMemo(
         () => (
-            <div>
+            <ViewItem>
                 <div>
                     {item.name} ({item.quantity})
                 </div>
                 <UpdatedAt>{updatedAtLocal.toRelative()} </UpdatedAt>
-            </div>
+            </ViewItem>
         ),
         [item]
     );
@@ -92,6 +94,7 @@ export default ({ item, addItem, deleteItem }) => {
             <Fragment>
                 {editMode && (
                     <ActionButton
+                        disabled={offline}
                         onClick={() => {
                             const quantity = Number(itemToUpdate.quantity);
                             updateItem({
@@ -112,19 +115,23 @@ export default ({ item, addItem, deleteItem }) => {
                         <FontAwesomeIcon icon={faWindowClose} />
                     </ActionButton>
                 ) : (
-                    <ActionButton onClick={() => setEditMode(true)}>
+                    <ActionButton
+                        disabled={offline}
+                        onClick={() => setEditMode(true)}
+                    >
                         <FontAwesomeIcon icon={faPencilAlt} />
                     </ActionButton>
                 )}
             </Fragment>
         ),
-        [editMode, itemToUpdate, item]
+        [editMode, itemToUpdate, item, offline]
     );
 
     const otherButtonsComponent = useMemo(
         () => (
             <Fragment>
                 <ActionButton
+                    disabled={offline}
                     onClick={() =>
                         addItem({
                             variables: {
@@ -136,6 +143,7 @@ export default ({ item, addItem, deleteItem }) => {
                     <FontAwesomeIcon icon={faClone} />
                 </ActionButton>
                 <ActionButton
+                    disabled={offline}
                     onClick={() =>
                         deleteItem({
                             variables: { id: item.id }
@@ -146,7 +154,7 @@ export default ({ item, addItem, deleteItem }) => {
                 </ActionButton>
             </Fragment>
         ),
-        [item]
+        [item, offline]
     );
 
     return (
@@ -163,7 +171,11 @@ export default ({ item, addItem, deleteItem }) => {
 const Item = styled.li`
     display: flex;
     justify-content: space-between;
-    margin: 0.4rem;
+    min-height: 54px;
+`;
+
+const ViewItem = styled.div`
+    margin-bottom: 0.2rem;
 `;
 
 const ItemActions = styled.div`
@@ -176,6 +188,7 @@ const ItemActions = styled.div`
 `;
 
 const UpdateForm = styled.div`
+    margin-bottom: 0.2rem;
     input {
         margin-top: 0.4rem;
         margin-right: 0.4rem;

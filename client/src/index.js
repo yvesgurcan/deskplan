@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Switch, Route } from 'react-router-dom';
-import styled, { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
 
+import { usePrevious } from './util';
 import Home from './views/Home';
 import Header from './components/Shared.Header';
+import Error from './components/Shared.Error';
 
 const cache = new InMemoryCache();
 const client = new ApolloClient({
@@ -17,13 +19,56 @@ const client = new ApolloClient({
 });
 
 const App = () => {
+    const [offlineAccess, setOfflineAccess] = useState(false);
+    const [offline, setOffline] = useState(!navigator.onLine);
+    const prevOffline = usePrevious(offline);
+
+    useEffect(() => {
+        async function getOfflineAccess() {
+            const workerRegistered = await navigator.serviceWorker
+                .getRegistrations()
+                .then(function(reg) {
+                    return reg.length > 0;
+                });
+            setOfflineAccess(workerRegistered || false);
+        }
+        getOfflineAccess();
+
+        window.addEventListener('offline', () => {
+            setOffline(true);
+        });
+        window.addEventListener('online', () => {
+            setOffline(false);
+        });
+    }, []);
+
+    console.log(offline);
+
     return (
         <ApolloProvider client={client}>
             <HashRouter>
                 <GlobalStyle />
-                <Header />
+                <Error
+                    error={
+                        offline ? (
+                            <div>
+                                You're offline.{' '}
+                                {offlineAccess
+                                    ? 'You can continue to use the application but changes will not be saved.'
+                                    : 'You will not be able to access the application if you reload the page.'}
+                            </div>
+                        ) : prevOffline ? (
+                            <div>You're back online!</div>
+                        ) : null
+                    }
+                />
+                <Header
+                    offline={offline}
+                    offlineAccess={offlineAccess}
+                    setOfflineAccess={setOfflineAccess}
+                />
                 <Switch>
-                    <Route path="/" component={Home} />
+                    <Route path="/" render={() => <Home offline={offline} />} />
                 </Switch>
             </HashRouter>
         </ApolloProvider>
@@ -40,6 +85,7 @@ const GlobalStyle = createGlobalStyle`
         color: white;
         font-family: 'Oxanium';
         padding-bottom: 5rem;
+        box-sizing: border-box;
     }
 `;
 
