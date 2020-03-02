@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 
-import Greetings from '../sections/Greetings';
-import ItemList from '../sections/ItemList';
-import AddItem from '../sections/AddItem';
+import Greetings from './Greetings';
+import ItemList from './ItemList';
+import AddItem from './AddItem';
 
 export default () => {
     return (

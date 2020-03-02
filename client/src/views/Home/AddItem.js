@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useMutation } from '@apollo/react-hooks';
 
-import { GET_ITEMS, ADD_ITEM } from '../queries/items';
+import { GET_ITEMS, ADD_ITEM } from '../../queries/items';
 
-import Button from '../components/Button';
-import TextInput from '../components/TextInput';
-import NumberInput from '../components/NumberInput';
-import Error from '../components/Error';
+import Button from '../../components/Button';
+import TextInput from '../../components/TextInput';
+import NumberInput from '../../components/NumberInput';
+import Error from '../../components/Error';
 
 const DEFAULT_ADD_ITEM = {
     name: '',
