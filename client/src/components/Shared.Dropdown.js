@@ -13,6 +13,7 @@ export default ({ options, ...props }) => (
 
 const Dropdown = styled.select`
     font-size: 110%;
+    font-family: 'Oxanium';
 `;
 
 const Option = styled.option``;

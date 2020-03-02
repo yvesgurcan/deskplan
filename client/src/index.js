@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -8,7 +8,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
 
 import Home from './views/Home';
-import Error from './components/Shared.Error';
+import Header from './components/Shared.Header';
+import OfflineHandling from './components/Shared.OfflineHandling';
 
 const cache = new InMemoryCache();
 const client = new ApolloClient({
@@ -16,88 +17,13 @@ const client = new ApolloClient({
     uri: 'http://localhost:4000'
 });
 
-function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    });
-    return ref.current;
-}
-
 const App = () => {
-    const [offlineAccess, setOfflineAccess] = useState(false);
-    const [offline, setOffline] = useState(!navigator.onLine);
-    const prevOffline = usePrevious(offline);
-
-    useEffect(() => {
-        async function getOfflineAccess() {
-            const workerRegistered = await navigator.serviceWorker
-                .getRegistrations()
-                .then(function(reg) {
-                    return reg.length > 0;
-                });
-            setOfflineAccess(workerRegistered || false);
-        }
-
-        window.addEventListener('offline', () => {
-            setOffline(true);
-        });
-        window.addEventListener('online', () => {
-            setOffline(false);
-        });
-
-        getOfflineAccess();
-    }, []);
-
     return (
         <ApolloProvider client={client}>
             <HashRouter>
                 <GlobalStyle />
-                <Header>
-                    <AppName>deskplan</AppName>
-                </Header>
-                <Error
-                    error={
-                        offline ? (
-                            <div>
-                                You're offline.{' '}
-                                {offlineAccess
-                                    ? 'You can continue to use the application but changes will not be saved.'
-                                    : 'You will not be able to access the application if you reload the page.'}
-                            </div>
-                        ) : prevOffline ? (
-                            <div>You're back online!</div>
-                        ) : null
-                    }
-                ></Error>
-                {!offline && (
-                    <OfflineAccess>
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={offlineAccess}
-                                onChange={() => {
-                                    const updatedOfflineAccess = !offlineAccess;
-                                    if (updatedOfflineAccess) {
-                                        navigator.serviceWorker.register(
-                                            '/service-worker.js'
-                                        );
-                                    } else {
-                                        navigator.serviceWorker
-                                            .getRegistrations()
-                                            .then(function(registrations) {
-                                                for (let registration of registrations) {
-                                                    registration.unregister();
-                                                }
-                                            });
-                                    }
-                                    setOfflineAccess(updatedOfflineAccess);
-                                }}
-                            />{' '}
-                            Enable offline access.
-                        </label>
-                    </OfflineAccess>
-                )}
+                <Header />
+                <OfflineHandling />
                 <Container>
                     <Main>
                         <Switch>
@@ -117,20 +43,8 @@ const GlobalStyle = createGlobalStyle`
         min-height: 100vh;
         background: black;
         color: white;
+        font-family: 'Oxanium';
     }
-`;
-
-const Header = styled.header`
-    background: rgb(80, 80, 80);
-`;
-
-const OfflineAccess = styled.div`
-    text-align: right;
-    padding-right: 1rem;
-`;
-
-const AppName = styled.h1`
-    padding: 1rem;
 `;
 
 const Container = styled.main`
