@@ -39,18 +39,8 @@ export default () => {
     const [sortBy, setSortBy] = useState('updatedAt');
     const [sortOrderModifier, setSortOrderModifier] = useState(1);
 
-    const {
-        loading,
-        error,
-        data: { items }
-    } = useQuery(GET_ITEMS, {
-        fetchPolicy: 'cache-and-network',
-        variables: {
-            sortBy,
-            sortOrderModifier,
-            offset: 0,
-            limit: 10
-        }
+    const { loading, error, data: { items = [] } = {} } = useQuery(GET_ITEMS, {
+        fetchPolicy: 'cache-and-network'
     });
 
     const [addItem, { error: addItemError = [] }] = useMutation(ADD_ITEM, {

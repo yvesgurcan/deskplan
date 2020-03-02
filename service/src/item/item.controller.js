@@ -1,19 +1,10 @@
 import { connect, close, parseMongooseErrors } from '../util';
 import ItemModel from './item.model.js';
 
-export async function getItems(_, parameters) {
-    const {
-        sortBy = 'updatedAt',
-        sortOrderModifier = 1,
-        offset = 0,
-        limit = 0
-    } = parameters;
+export async function getItems() {
     connect();
     try {
-        const result = await ItemModel.find()
-            .sort({ [sortBy]: sortOrderModifier })
-            .skip(offset * limit)
-            .limit(limit);
+        const result = await ItemModel.find();
         close();
         return result;
     } catch (error) {

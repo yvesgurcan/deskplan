@@ -9,8 +9,8 @@ export const ITEM_FIELDS = `
 `;
 
 export const GET_ITEMS = gql`
-    query getItems($sortBy: String!, $sortOrderModifier: Int!, $offset: Int!, $limit: Int!) {
-        items(sortBy: $sortBy, sortOrderModifier: $sortOrderModifier, offset: $offset, limit: $limit) {
+    query getItems {
+        items {
             ${ITEM_FIELDS}
         }
     }

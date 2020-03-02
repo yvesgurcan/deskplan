@@ -23,8 +23,7 @@ export default gql`
     }
 
     type Query {
-        items(sortBy: String!, sortOrderModifier: Int!, offset: Int!, limit: Int!): [Item]
-        user: User
+        items: [Item]
     }
 
     type Mutation {
