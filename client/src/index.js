@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -8,7 +8,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
 
 import Home from './views/Home';
-import { ErrorContainer } from './components/Shared.Error';
+import Error from './components/Shared.Error';
 
 const cache = new InMemoryCache();
 const client = new ApolloClient({
@@ -16,9 +16,18 @@ const client = new ApolloClient({
     uri: 'http://localhost:4000'
 });
 
+function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
+
 const App = () => {
     const [offlineAccess, setOfflineAccess] = useState(false);
     const [offline, setOffline] = useState(!navigator.onLine);
+    const prevOffline = usePrevious(offline);
 
     useEffect(() => {
         async function getOfflineAccess() {
@@ -47,15 +56,20 @@ const App = () => {
                 <Header>
                     <AppName>deskplan</AppName>
                 </Header>
-                {offline && (
-                    <Error>
-                        You're offline.{' '}
-                        {offlineAccess
-                            ? 'You can continue to use the application but changes will not be saved.'
-                            : 'You will not be able to access the application if you reload the page.'}
-                    </Error>
-                )}
-
+                <Error
+                    error={
+                        offline ? (
+                            <div>
+                                You're offline.{' '}
+                                {offlineAccess
+                                    ? 'You can continue to use the application but changes will not be saved.'
+                                    : 'You will not be able to access the application if you reload the page.'}
+                            </div>
+                        ) : prevOffline ? (
+                            <div>You're back online!</div>
+                        ) : null
+                    }
+                ></Error>
                 {!offline && (
                     <OfflineAccess>
                         <label>
@@ -113,10 +127,6 @@ const Header = styled.header`
 const OfflineAccess = styled.div`
     text-align: right;
     padding-right: 1rem;
-`;
-
-const Error = styled(ErrorContainer)`
-    text-align: center;
 `;
 
 const AppName = styled.h1`
