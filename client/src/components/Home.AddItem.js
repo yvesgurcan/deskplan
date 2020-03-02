@@ -79,7 +79,10 @@ const AddForm = styled.form`
     border-top: 1px solid black;
     background: linear-gradient(rgb(60, 60, 60), rgb(35, 35, 35));
     padding: 1rem;
+<<<<<<< HEAD
     box-sizing: border-box;
+=======
+>>>>>>> eb16feae8fb7dbb7f27b3d419c1250683a749fcd
     margin: 0;
 `;
 
