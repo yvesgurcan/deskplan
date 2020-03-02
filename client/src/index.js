@@ -39,6 +39,7 @@ const GlobalStyle = createGlobalStyle`
         background: radial-gradient(circle, rgb(35, 35, 35) 0%, rgb(10, 10, 10) 100%);
         color: white;
         font-family: 'Oxanium';
+        padding-bottom: 5rem;
     }
 `;
 

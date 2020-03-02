@@ -1,59 +1,20 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faSearch,
-    faArrowDown,
-    faArrowUp,
-    faPlus,
-    faMinus
-} from '@fortawesome/free-solid-svg-icons';
-
 import {
     GET_ITEMS,
     ADD_ITEM,
     ADD_STARTER_ITEMS,
     DELETE_ITEM
 } from '../queries/items';
+import Error from '../components/Shared.Error';
+import Item from '../components/Shared.Item';
+import Button from '../components/Shared.Button';
+import Paginator from '../components/Shared.Paginator';
 
-import Error from './Shared.Error';
-import Item from './Shared.Item';
-import Button from './Shared.Button';
-import Dropdown from './Shared.Dropdown';
-import TextInput from './Shared.TextInput';
-import Paginator from './Shared.Paginator';
-import AddItem from './Home.AddItem';
-
-const SORT_OPTIONS = [
-    {
-        text: 'Updated',
-        value: 'updatedAt'
-    },
-    {
-        text: 'Created',
-        value: 'createdAt'
-    },
-    {
-        text: 'Name',
-        value: 'name'
-    },
-    {
-        text: 'Quantity',
-        value: 'quantity'
-    }
-];
-
-const LIMIT_OPTIONS = [10, 20, 30, 40, 50, 60, 70];
-
-export default () => {
-    const [openModal, setOpenModal] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
+export default ({ searchTerm, sortBy, sortOrderModifier, limit }) => {
     const [filteredItems, setFilteredItems] = useState([]);
-    const [sortBy, setSortBy] = useState('updatedAt');
-    const [sortOrderModifier, setSortOrderModifier] = useState(1);
     const [offset, setOffset] = useState(0);
-    const [limit, setLimit] = useState(50);
 
     const { loading, error, data: { items = [] } = {} } = useQuery(GET_ITEMS, {
         fetchPolicy: 'cache-and-network'
@@ -145,161 +106,64 @@ export default () => {
         }
     }, [items, searchTerm, sortBy, sortOrderModifier]);
 
-    const searchComponent = useMemo(
+    const itemListComponent = useMemo(
         () => (
-            <FilterFunctionalities>
-                <FilterContainer>
-                    <InsideFilter>
-                        <FilterGroup>
-                            <FontAwesomeIcon icon={faSearch} />{' '}
-                            <SearchInput
-                                placeholder="Search"
-                                value={searchTerm}
-                                onChange={event =>
-                                    setSearchTerm(event.target.value)
-                                }
+            <Paginator
+                data={filteredItems}
+                offset={offset}
+                setOffset={setOffset}
+                limit={limit}
+            >
+                {slicedItems => (
+                    <ul>
+                        <Error error={deleteItemError} />
+                        {slicedItems.map(item => (
+                            <Item
+                                key={item.id}
+                                item={item}
+                                addItem={addItem}
+                                deleteItem={deleteItem}
                             />
-                        </FilterGroup>
-                        <FilterGroup>
-                            Sort:{' '}
-                            <Dropdown
-                                value={sortBy}
-                                options={SORT_OPTIONS}
-                                onChange={event =>
-                                    setSortBy(event.target.value)
-                                }
-                            />
-                        </FilterGroup>
-                        <FilterGroup>
-                            Per page:{' '}
-                            <Dropdown
-                                value={limit}
-                                options={LIMIT_OPTIONS}
-                                onChange={event => {
-                                    setLimit(parseInt(event.target.value));
-                                }}
-                            />
-                        </FilterGroup>
-                        <SortOrder
-                            onClick={() =>
-                                setSortOrderModifier(sortOrderModifier * -1)
-                            }
-                        >
-                            {sortOrderModifier === 1 ? (
-                                <FontAwesomeIcon icon={faArrowDown} />
-                            ) : (
-                                <FontAwesomeIcon icon={faArrowUp} />
-                            )}
-                        </SortOrder>
-                        <SortOrder onClick={() => setOpenModal(!openModal)}>
-                            {openModal ? (
-                                <FontAwesomeIcon icon={faMinus} />
-                            ) : (
-                                <FontAwesomeIcon icon={faPlus} />
-                            )}
-                        </SortOrder>
-                    </InsideFilter>
-                </FilterContainer>
-            </FilterFunctionalities>
+                        ))}
+                    </ul>
+                )}
+            </Paginator>
         ),
-        [searchTerm, sortBy, sortOrderModifier, limit, openModal]
+        [filteredItems, offset, limit]
     );
 
     return (
-        <Fragment>
-            {searchComponent}
-            {openModal ? <AddItem /> : null}
-            <ItemContainer>
-                <Container>
-                    {loading & (items && items.length === 0) ? (
-                        <Loading>Loading...</Loading>
-                    ) : searchTerm &&
-                      filteredItems &&
-                      filteredItems.length === 0 ? (
-                        <NothingFound>
-                            No item found for "{searchTerm}". 😥
-                        </NothingFound>
-                    ) : items && items.length > 0 ? (
-                        <Paginator
-                            data={filteredItems}
-                            offset={offset}
-                            setOffset={setOffset}
-                            limit={limit}
-                        >
-                            {slicedItems => (
-                                <Results>
-                                    <Error error={deleteItemError} />
-                                    {slicedItems.map(item => (
-                                        <Item
-                                            key={item.id}
-                                            item={item}
-                                            addItem={addItem}
-                                            deleteItem={deleteItem}
-                                        />
-                                    ))}
-                                </Results>
-                            )}
-                        </Paginator>
-                    ) : error ? null : (
-                        <Fragment>
-                            <Error error={addStarterItemsError} />
-                            <StarterPrompt>
-                                <p>
-                                    Looks like you don't have any items in your
-                                    inventory yet. Would you like to start with
-                                    some typical office items?
-                                </p>
-                                <Button onClick={addStarterItems}>
-                                    Create starter items
-                                </Button>
-                            </StarterPrompt>
-                        </Fragment>
-                    )}
-                </Container>
-            </ItemContainer>
-        </Fragment>
+        <ItemListContainer>
+            <Container>
+                {loading & (items && items.length === 0) ? (
+                    <Loading>Loading...</Loading>
+                ) : searchTerm &&
+                  filteredItems &&
+                  filteredItems.length === 0 ? (
+                    <NothingFound>
+                        No item found for "{searchTerm}". 😥
+                    </NothingFound>
+                ) : items && items.length > 0 ? (
+                    itemListComponent
+                ) : error ? null : (
+                    <Fragment>
+                        <Error error={addStarterItemsError} />
+                        <StarterPrompt>
+                            <p>
+                                Looks like you don't have any items in your
+                                inventory yet. Would you like to start with some
+                                typical office items?
+                            </p>
+                            <Button onClick={addStarterItems}>
+                                Create starter items
+                            </Button>
+                        </StarterPrompt>
+                    </Fragment>
+                )}
+            </Container>
+        </ItemListContainer>
     );
 };
-
-const FilterFunctionalities = styled.div`
-    border-top: 1px solid black;
-    background: linear-gradient(rgb(85, 85, 85), rgb(60, 60, 60));
-    min-width: 100%;
-`;
-
-const InsideFilter = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    width: 100%;
-    max-width: 840px;
-`;
-
-const FilterContainer = styled.div`
-    display: flex;
-    justify-content: center;
-`;
-
-const FilterGroup = styled.div`
-    margin: 0.25rem;
-    margin-left: 0.4rem;
-    margin-right: 0.4rem;
-`;
-
-const SortOrder = styled(Button)`
-    margin: 0.25rem;
-    margin-left: 0.4rem;
-    margin-right: 0.4rem;
-    height: 2.7rem;
-`;
-
-const SearchInput = styled(TextInput)`
-    padding: 0.3rem;
-    margin-left: 0.5rem;
-    font-size: 110%;
-`;
 
 const Loading = styled.div`
     text-align: center;
@@ -311,12 +175,10 @@ const StarterPrompt = styled.div`
 `;
 const NothingFound = styled(Loading)``;
 
-const Results = styled.ul``;
-
-const ItemContainer = styled.section`
-    padding-bottom: 8rem;
+const ItemListContainer = styled.main`
     display: flex;
     justify-content: center;
+    padding-top: 1rem;
 `;
 
 const Container = styled.div`

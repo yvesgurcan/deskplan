@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
-import { parseApolloErrors } from '../util';
+import { parseApolloErrors, useIsMounted } from '../util';
 
 export default ({ error }) => {
+    const isMounted = useIsMounted();
     const [node, setNode] = useState(null);
 
     useEffect(() => {
@@ -24,7 +25,11 @@ export default ({ error }) => {
                 </ErrorContainer>
             );
 
-            setTimeout(() => setNode(null), 5000);
+            setTimeout(() => {
+                if (isMounted) {
+                    setNode(null);
+                }
+            }, 5000);
         }
     }, [error]);
 

@@ -93,16 +93,6 @@ export default ({ item, addItem, deleteItem }) => {
                 {editMode && (
                     <ActionButton
                         onClick={() => {
-                            setEditMode(false);
-                            setItemToUpdate({ ...item });
-                        }}
-                    >
-                        <FontAwesomeIcon icon={faWindowClose} />
-                    </ActionButton>
-                )}
-                {editMode ? (
-                    <ActionButton
-                        onClick={() => {
                             const quantity = Number(itemToUpdate.quantity);
                             updateItem({
                                 variables: { ...itemToUpdate, quantity }
@@ -110,6 +100,16 @@ export default ({ item, addItem, deleteItem }) => {
                         }}
                     >
                         <FontAwesomeIcon icon={faSave} />
+                    </ActionButton>
+                )}
+                {editMode ? (
+                    <ActionButton
+                        onClick={() => {
+                            setEditMode(false);
+                            setItemToUpdate({ ...item });
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faWindowClose} />
                     </ActionButton>
                 ) : (
                     <ActionButton onClick={() => setEditMode(true)}>

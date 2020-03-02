@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faChevronRight,
     faChevronLeft
 } from '@fortawesome/free-solid-svg-icons';
+import { sliceData } from '../util';
 import Button from './Shared.Button';
 
 const Controls = ({ data, offset, setOffset, limit }) => (
-    <Container>
+    <ControlsContainer>
         {offset ? (
             <Button onClick={() => setOffset(offset - 1)}>
                 <FontAwesomeIcon icon={faChevronLeft} />
@@ -27,22 +28,18 @@ const Controls = ({ data, offset, setOffset, limit }) => (
         ) : (
             <div />
         )}
-    </Container>
+    </ControlsContainer>
 );
 
-const sliceData = ({ data, offset, limit }) =>
-    data.slice(offset * limit, (offset + 1) * limit);
-
 export default ({ children, ...props }) => (
-    <div>
+    <Fragment>
         <Controls {...props} />
         {children(sliceData(props))}
         <Controls {...props} />
-    </div>
+    </Fragment>
 );
 
-const Container = styled.div`
-    padding-top: 1rem;
+const ControlsContainer = styled.div`
     display: flex;
     justify-content: space-between;
 `;

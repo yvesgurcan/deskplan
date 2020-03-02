@@ -1,15 +1,8 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { usePrevious } from '../util';
 import Error from './Shared.Error';
 import Checkbox from './Shared.Checkbox';
-
-function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    });
-    return ref.current;
-}
 
 export default () => {
     const [offlineAccess, setOfflineAccess] = useState(false);
