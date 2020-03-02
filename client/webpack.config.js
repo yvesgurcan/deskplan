@@ -6,7 +6,7 @@ const { GenerateSW } = require('workbox-webpack-plugin');
 module.exports = {
     output: {
         filename: '[name].[hash].js',
-        path: path.resolve(__dirname, './')
+        path: path.resolve(__dirname, '../')
     },
     plugins: [
         new HtmlWebpackPlugin({
