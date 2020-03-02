@@ -5,10 +5,10 @@ import DateTime from 'luxon/src/datetime.js';
 
 import { GET_ITEMS, UPDATE_ITEM } from '../queries/items';
 
-import Button from '../components/Button';
-import TextInput from '../components/TextInput';
-import NumberInput from '../components/NumberInput';
-import Error from '../components/Error';
+import Button from './Shared.Button';
+import TextInput from './Shared.TextInput';
+import NumberInput from './Shared.NumberInput';
+import Error from './Shared.Error';
 
 export default ({ item, addItem, deleteItem }) => {
     const [editMode, setEditMode] = useState(false);

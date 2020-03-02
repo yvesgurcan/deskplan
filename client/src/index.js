@@ -8,7 +8,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
 
 import Home from './views/Home';
-import { ErrorContainer } from './components/Error';
+import { ErrorContainer } from './components/Shared.Error';
 
 const cache = new InMemoryCache();
 const client = new ApolloClient({

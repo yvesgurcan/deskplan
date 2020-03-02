@@ -6,13 +6,13 @@ import {
     ADD_ITEM,
     ADD_STARTER_ITEMS,
     DELETE_ITEM
-} from '../../queries/items';
+} from '../queries/items';
 
-import Error from '../../components/Error';
-import Item from '../../components/Item';
-import Button from '../../components/Button';
-import Dropdown from '../../components/Dropdown';
-import TextInput from '../../components/TextInput';
+import Error from './Shared.Error';
+import Item from './Shared.Item';
+import Button from './Shared.Button';
+import Dropdown from './Shared.Dropdown';
+import TextInput from './Shared.TextInput';
 
 const SORT_OPTIONS = [
     {

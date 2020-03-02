@@ -1,9 +1,9 @@
 import React, { Fragment, useMemo } from 'react';
 import styled from 'styled-components';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_USER } from '../../queries/users';
+import { GET_USER } from '../queries/users';
 
-import Error from '../../components/Error';
+import Error from './Shared.Error';
 
 export default () => {
     const { error: getUserError, data: { user } = {} } = useQuery(GET_USER);
