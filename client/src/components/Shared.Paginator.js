@@ -1,0 +1,36 @@
+import React from 'react';
+import styled from 'styled-components';
+import Button from './Shared.Button';
+
+const Controls = ({ data, offset = 0, setOffset, limit = 50 }) => (
+    <Container>
+        <Button disabled={!offset} onClick={() => setOffset(offset - 1)}>
+            Previous
+        </Button>
+        <div>
+            Page {offset + 1} of {Math.ceil(data.length / limit)}
+        </div>
+        <Button
+            disabled={data.length / limit <= offset + 1}
+            onClick={() => setOffset(offset + 1)}
+        >
+            Next
+        </Button>
+    </Container>
+);
+
+const sliceData = ({ data, offset = 0, limit = 50 }) =>
+    data.slice(offset * limit, (offset + 1) * limit);
+
+export default ({ children, ...props }) => (
+    <div>
+        <Controls {...props} />
+        {children(sliceData(props))}
+        <Controls {...props} />
+    </div>
+);
+
+const Container = styled.div`
+    display: flex;
+    justify-content: space-between;
+`;

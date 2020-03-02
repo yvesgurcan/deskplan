@@ -13,6 +13,7 @@ import Item from './Shared.Item';
 import Button from './Shared.Button';
 import Dropdown from './Shared.Dropdown';
 import TextInput from './Shared.TextInput';
+import Paginator from './Shared.Paginator';
 
 const SORT_OPTIONS = [
     {
@@ -38,6 +39,7 @@ export default () => {
     const [filteredItems, setFilteredItems] = useState([]);
     const [sortBy, setSortBy] = useState('updatedAt');
     const [sortOrderModifier, setSortOrderModifier] = useState(1);
+    const [offset, setOffset] = useState(0);
 
     const { loading, error, data: { items = [] } = {} } = useQuery(GET_ITEMS, {
         fetchPolicy: 'cache-and-network'
@@ -169,19 +171,25 @@ export default () => {
                     No item found for "{searchTerm}". 😥
                 </NothingFound>
             ) : items && items.length > 0 ? (
-                <Fragment>
-                    <Results>
-                        <Error error={deleteItemError} />
-                        {filteredItems.map(item => (
-                            <Item
-                                key={item.id}
-                                item={item}
-                                addItem={addItem}
-                                deleteItem={deleteItem}
-                            />
-                        ))}
-                    </Results>
-                </Fragment>
+                <Paginator
+                    data={filteredItems}
+                    offset={offset}
+                    setOffset={setOffset}
+                >
+                    {slicedItems => (
+                        <Results>
+                            <Error error={deleteItemError} />
+                            {slicedItems.map(item => (
+                                <Item
+                                    key={item.id}
+                                    item={item}
+                                    addItem={addItem}
+                                    deleteItem={deleteItem}
+                                />
+                            ))}
+                        </Results>
+                    )}
+                </Paginator>
             ) : error ? null : (
                 <Fragment>
                     <Error error={addStarterItemsError} />
