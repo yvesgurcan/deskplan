@@ -113,7 +113,7 @@ const AddLabel = styled.label`
 
 const AddItem = styled.section`
     padding: 1rem;
-    max-width: 1000px;
+    max-width: 1100px;
 `;
 
 const AddButton = styled(Button)`

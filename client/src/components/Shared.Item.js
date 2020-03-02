@@ -44,7 +44,7 @@ export default ({ item, addItem, deleteItem }) => {
 
     const editItemComponent = useMemo(
         () => (
-            <div>
+            <UpdateForm>
                 <TextInput
                     value={itemToUpdate.name}
                     placeholder="Name of item"
@@ -66,7 +66,7 @@ export default ({ item, addItem, deleteItem }) => {
                     }
                 />
                 <Error error={updateItemError} />
-            </div>
+            </UpdateForm>
         ),
         [itemToUpdate, updateItemError]
     );
@@ -166,5 +166,11 @@ const ItemActions = styled.div`
     display: flex;
     & > * {
         margin: 0.2rem;
+    }
+`;
+
+const UpdateForm = styled.div`
+    & > * {
+        margin-right: 0.2rem;
     }
 `;
