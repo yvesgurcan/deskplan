@@ -73,7 +73,7 @@ export default () => {
                             setOfflineAccess(updatedOfflineAccess);
                         }}
                     >
-                        Enable offline access.
+                        Enable offline access
                     </Checkbox>
                 </OfflineAccess>
             )}

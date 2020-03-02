@@ -9,7 +9,6 @@ import { persistCache } from 'apollo-cache-persist';
 
 import Home from './views/Home';
 import Header from './components/Shared.Header';
-import OfflineHandling from './components/Shared.OfflineHandling';
 
 const cache = new InMemoryCache();
 const client = new ApolloClient({
@@ -23,14 +22,9 @@ const App = () => {
             <HashRouter>
                 <GlobalStyle />
                 <Header />
-                <OfflineHandling />
-                <Container>
-                    <Main>
-                        <Switch>
-                            <Route path="/" component={Home} />
-                        </Switch>
-                    </Main>
-                </Container>
+                <Switch>
+                    <Route path="/" component={Home} />
+                </Switch>
             </HashRouter>
         </ApolloProvider>
     );
@@ -42,20 +36,10 @@ const GlobalStyle = createGlobalStyle`
         font-size: 130%;
         min-height: 100vh;
         background: black;
+        background: radial-gradient(circle, rgb(35, 35, 35) 0%, rgb(10, 10, 10) 100%);
         color: white;
         font-family: 'Oxanium';
     }
-`;
-
-const Container = styled.main`
-    display: flex;
-    justify-content: center;
-`;
-
-const Main = styled.div`
-    max-width: 100%;
-    width: 1200px;
-    padding: 1rem;
 `;
 
 const setupAndRender = async () => {

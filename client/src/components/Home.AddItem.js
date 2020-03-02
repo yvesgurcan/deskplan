@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useMutation } from '@apollo/react-hooks';
 
@@ -29,7 +30,7 @@ export default () => {
         }
     });
 
-    return (
+    const node = (
         <AddItem>
             <Title>Add item</Title>
             <Error error={addItemError} />
@@ -74,11 +75,19 @@ export default () => {
             </AddForm>
         </AddItem>
     );
+
+    const mount = document.getElementById('modal');
+    return createPortal(node, mount);
 };
+
+const Title = styled.h2`
+    margin: 0;
+`;
 
 const AddForm = styled.form`
     display: flex;
     flex-direction: column;
+    margin: 0;
 `;
 
 const AddFormColumn = styled.div`
@@ -89,7 +98,8 @@ const AddFormColumn = styled.div`
 
 const AddFormGroup = styled.div`
     margin-right: 5rem;
-    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 `;
 
 const AddLabel = styled.label`
@@ -97,13 +107,6 @@ const AddLabel = styled.label`
     font-size: 110%;
 `;
 
-const SectionSeparator = styled.section`
-    border-top: 5px solid rgb(80, 80, 80);
-    padding-top: 2rem;
-`;
-
-const AddItem = styled(SectionSeparator)``;
-
-const Title = styled.h2`
-    margin: 0;
+const AddItem = styled.section`
+    padding: 1rem;
 `;

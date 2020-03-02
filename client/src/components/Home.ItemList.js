@@ -14,6 +14,7 @@ import Button from './Shared.Button';
 import Dropdown from './Shared.Dropdown';
 import TextInput from './Shared.TextInput';
 import Paginator from './Shared.Paginator';
+import AddItem from './Home.AddItem';
 
 const SORT_OPTIONS = [
     {
@@ -37,6 +38,7 @@ const SORT_OPTIONS = [
 const LIMIT_OPTIONS = [10, 25, 50, 75];
 
 export default () => {
+    const [openModal, setOpenModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredItems, setFilteredItems] = useState([]);
     const [sortBy, setSortBy] = useState('updatedAt');
@@ -128,9 +130,8 @@ export default () => {
 
     const searchComponent = useMemo(
         () => (
-            <Search>
-                <Title>Your inventory</Title>
-                <FilterFunctionalities>
+            <FilterFunctionalities>
+                <InsideFilter>
                     <div>
                         🔎{' '}
                         <SearchInput
@@ -141,21 +142,25 @@ export default () => {
                             }
                         />
                     </div>
-                    <Sort>Sort:</Sort>
-                    <Dropdown
-                        value={sortBy}
-                        options={SORT_OPTIONS}
-                        onChange={event => setSortBy(event.target.value)}
-                    />
-                    <Sort>Per page:</Sort>
-                    <Dropdown
-                        value={limit}
-                        options={LIMIT_OPTIONS}
-                        onChange={event => {
-                            console.log(parseInt(event.target.value));
-                            setLimit(parseInt(event.target.value));
-                        }}
-                    />
+                    <div>
+                        Sort:{' '}
+                        <Dropdown
+                            value={sortBy}
+                            options={SORT_OPTIONS}
+                            onChange={event => setSortBy(event.target.value)}
+                        />
+                    </div>
+                    <div>
+                        Per page:{' '}
+                        <Dropdown
+                            value={limit}
+                            options={LIMIT_OPTIONS}
+                            onChange={event => {
+                                console.log(parseInt(event.target.value));
+                                setLimit(parseInt(event.target.value));
+                            }}
+                        />
+                    </div>
                     <SortOrder
                         onClick={() =>
                             setSortOrderModifier(sortOrderModifier * -1)
@@ -163,89 +168,96 @@ export default () => {
                     >
                         {sortOrderModifier === 1 ? '▼' : '▲'}
                     </SortOrder>
-                </FilterFunctionalities>
-            </Search>
+                    <SortOrder onClick={() => setOpenModal(true)}>+</SortOrder>
+                </InsideFilter>
+            </FilterFunctionalities>
         ),
-        [searchTerm, sortBy, sortOrderModifier, limit]
+        [searchTerm, sortBy, sortOrderModifier, limit, openModal]
     );
 
     return (
-        <ItemContainer>
+        <Fragment>
+            {openModal ? <AddItem /> : null}
             {searchComponent}
-            <Search>
-                {error ? <Error error={error} /> : <div />}
-                <div>
-                    {filteredItems.length}{' '}
-                    {filteredItems.length < 2 ? 'item' : 'items'}
-                </div>
-            </Search>
-            {loading & (items && items.length === 0) ? (
-                <Loading>Loading...</Loading>
-            ) : searchTerm && filteredItems && filteredItems.length === 0 ? (
-                <NothingFound>
-                    No item found for "{searchTerm}". 😥
-                </NothingFound>
-            ) : items && items.length > 0 ? (
-                <Paginator
-                    data={filteredItems}
-                    offset={offset}
-                    setOffset={setOffset}
-                    limit={limit}
-                >
-                    {slicedItems => (
-                        <Results>
-                            <Error error={deleteItemError} />
-                            {slicedItems.map(item => (
-                                <Item
-                                    key={item.id}
-                                    item={item}
-                                    addItem={addItem}
-                                    deleteItem={deleteItem}
-                                />
-                            ))}
-                        </Results>
+            <ItemContainer>
+                <Container>
+                    <ItemCount>
+                        <Error error={error} />
+                        <div>
+                            {filteredItems.length}{' '}
+                            {filteredItems.length < 2 ? 'item' : 'items'}
+                        </div>
+                    </ItemCount>
+                    {loading & (items && items.length === 0) ? (
+                        <Loading>Loading...</Loading>
+                    ) : searchTerm &&
+                      filteredItems &&
+                      filteredItems.length === 0 ? (
+                        <NothingFound>
+                            No item found for "{searchTerm}". 😥
+                        </NothingFound>
+                    ) : items && items.length > 0 ? (
+                        <Paginator
+                            data={filteredItems}
+                            offset={offset}
+                            setOffset={setOffset}
+                            limit={limit}
+                        >
+                            {slicedItems => (
+                                <Results>
+                                    <Error error={deleteItemError} />
+                                    {slicedItems.map(item => (
+                                        <Item
+                                            key={item.id}
+                                            item={item}
+                                            addItem={addItem}
+                                            deleteItem={deleteItem}
+                                        />
+                                    ))}
+                                </Results>
+                            )}
+                        </Paginator>
+                    ) : error ? null : (
+                        <Fragment>
+                            <Error error={addStarterItemsError} />
+                            <StarterPrompt>
+                                <p>
+                                    Looks like you don't have any items in your
+                                    inventory yet. Would you like to start with
+                                    some typical office items?
+                                </p>
+                                <Button onClick={addStarterItems}>
+                                    Create starter items
+                                </Button>
+                            </StarterPrompt>
+                        </Fragment>
                     )}
-                </Paginator>
-            ) : error ? null : (
-                <Fragment>
-                    <Error error={addStarterItemsError} />
-                    <StarterPrompt>
-                        <p>
-                            Looks like you don't have any items in your
-                            inventory yet. Would you like to start with some
-                            typical office items?
-                        </p>
-                        <Button onClick={addStarterItems}>
-                            Create starter items
-                        </Button>
-                    </StarterPrompt>
-                </Fragment>
-            )}
-        </ItemContainer>
+                </Container>
+            </ItemContainer>
+        </Fragment>
     );
 };
 
-const Search = styled.div`
+const FilterFunctionalities = styled.div`
+    border-top: 1px solid black;
+    background: linear-gradient(rgb(85, 85, 85), rgb(60, 60, 60));
+    min-width: 100%;
+`;
+
+const InsideFilter = styled.div`
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    padding: 1rem;
 `;
 
-const FilterFunctionalities = styled.div`
-    display: flex;
-    align-items: center;
-`;
-
-const Sort = styled.div`
-    margin: 0.5rem;
+const ItemCount = styled.div`
+    text-align: right;
 `;
 
 const SortOrder = styled(Button)`
     margin-left: 0.5rem;
-`;
-
-const Title = styled.h2`
-    margin: 0;
 `;
 
 const SearchInput = styled(TextInput)`
@@ -266,11 +278,11 @@ const NothingFound = styled(Loading)``;
 
 const Results = styled.ul``;
 
-const SectionSeparator = styled.section`
-    border-top: 5px solid rgb(80, 80, 80);
-    padding-top: 2rem;
+const ItemContainer = styled.section`
+    padding-bottom: 8rem;
+    display: flex;
+    justify-content: center;
+    max-width: 1200px;
 `;
 
-const ItemContainer = styled(SectionSeparator)`
-    padding-bottom: 8rem;
-`;
+const Container = styled.div``;
