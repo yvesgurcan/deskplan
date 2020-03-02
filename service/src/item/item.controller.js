@@ -1,5 +1,5 @@
-import { connect, close, parseMongooseErrors } from '../db/connection';
-import ItemModel from '../db/items';
+import { connect, close, parseMongooseErrors } from '../util';
+import ItemModel from './item.model.js';
 
 export async function getItems(_, parameters) {
     const {

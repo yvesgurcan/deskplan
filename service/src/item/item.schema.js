@@ -6,10 +6,6 @@ const ItemFields = `
 `;
 
 export default gql`
-    type User {
-        firstName: String
-    }
-
     input ItemInput {
         ${ItemFields}
     }

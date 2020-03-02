@@ -1,15 +1,13 @@
-import { getUser } from './users';
 import {
     getItems,
     addItem,
     addStarterItems,
     updateItem,
     deleteItem
-} from './items';
+} from './item.controller';
 
 export default {
     Query: {
-        user: getUser,
         items: getItems
     },
     Mutation: {
