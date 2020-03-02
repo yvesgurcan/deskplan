@@ -17,7 +17,8 @@ const Controls = ({ data, offset, setOffset, limit }) => (
             <div />
         )}
         <div>
-            Page {offset + 1} of {Math.ceil(data.length / limit)}
+            Page {offset + 1} of {Math.ceil(data.length / limit)} -{' '}
+            {data.length} {data.length < 2 ? 'item' : 'items'}
         </div>
         {data.length / limit >= offset + 1 ? (
             <Button onClick={() => setOffset(offset + 1)}>
@@ -41,6 +42,7 @@ export default ({ children, ...props }) => (
 );
 
 const Container = styled.div`
+    padding-top: 1rem;
     display: flex;
     justify-content: space-between;
 `;

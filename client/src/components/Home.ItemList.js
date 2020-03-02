@@ -203,13 +203,6 @@ export default () => {
             {openModal ? <AddItem /> : null}
             <ItemContainer>
                 <Container>
-                    <ItemCount>
-                        <Error error={error} />
-                        <div>
-                            {filteredItems.length}{' '}
-                            {filteredItems.length < 2 ? 'item' : 'items'}
-                        </div>
-                    </ItemCount>
                     {loading & (items && items.length === 0) ? (
                         <Loading>Loading...</Loading>
                     ) : searchTerm &&
@@ -279,12 +272,6 @@ const InsideFilter = styled.div`
 const FilterContainer = styled.div`
     display: flex;
     justify-content: center;
-`;
-
-const ItemCount = styled.div`
-    text-align: right;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
 `;
 
 const FilterGroup = styled.div`

@@ -44,13 +44,10 @@ export default () => {
                 >
                     <AddFormColumn>
                         <AddFormGroup>
-                            <Title>Add item</Title>
-                        </AddFormGroup>
-                        <AddFormGroup>
                             <AddLabel>Name:</AddLabel>
                             <TextInput
                                 value={itemToAdd.name}
-                                placeholder="Name of item"
+                                placeholder="Name of item to add"
                                 onChange={event =>
                                     setItemToAdd({
                                         ...itemToAdd,
@@ -84,27 +81,28 @@ export default () => {
     );
 };
 
-const Title = styled.h2`
-    margin: 0;
-    display: inline;
-`;
-
 const AddForm = styled.form`
     display: flex;
-    flex-direction: column;
     margin: 0;
 `;
 
 const AddFormColumn = styled.div`
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+
+    & > div {
+        margin-right: 3rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    & > div:last-child {
+        margin-right: 0;
+    }
 `;
 
-const AddFormGroup = styled.div`
-    margin-right: 4rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-`;
+const AddFormGroup = styled.div``;
 
 const AddLabel = styled.label`
     padding: 0.3rem;
@@ -113,12 +111,11 @@ const AddLabel = styled.label`
 
 const AddItem = styled.section`
     padding: 1rem;
-    max-width: 1100px;
 `;
 
 const AddButton = styled(Button)`
     margin-left: 2rem;
-    margin-top: 0.35rem;
+    height: 2.7rem;
 `;
 
 const Container = styled.div`

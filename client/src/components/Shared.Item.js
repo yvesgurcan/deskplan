@@ -78,7 +78,10 @@ export default ({ item, addItem, deleteItem }) => {
     const viewItemComponent = useMemo(
         () => (
             <div>
-                {item.name} ({item.quantity}) {updatedAtLocal.toRelative()}{' '}
+                <div>
+                    {item.name} ({item.quantity})
+                </div>
+                <UpdatedAt>{updatedAtLocal.toRelative()} </UpdatedAt>
             </div>
         ),
         [item]
@@ -88,17 +91,17 @@ export default ({ item, addItem, deleteItem }) => {
         () => (
             <Fragment>
                 {editMode && (
-                    <Button
+                    <ActionButton
                         onClick={() => {
                             setEditMode(false);
                             setItemToUpdate({ ...item });
                         }}
                     >
                         <FontAwesomeIcon icon={faWindowClose} />
-                    </Button>
+                    </ActionButton>
                 )}
                 {editMode ? (
-                    <Button
+                    <ActionButton
                         onClick={() => {
                             const quantity = Number(itemToUpdate.quantity);
                             updateItem({
@@ -107,11 +110,11 @@ export default ({ item, addItem, deleteItem }) => {
                         }}
                     >
                         <FontAwesomeIcon icon={faSave} />
-                    </Button>
+                    </ActionButton>
                 ) : (
-                    <Button onClick={() => setEditMode(true)}>
+                    <ActionButton onClick={() => setEditMode(true)}>
                         <FontAwesomeIcon icon={faPencilAlt} />
-                    </Button>
+                    </ActionButton>
                 )}
             </Fragment>
         ),
@@ -121,7 +124,7 @@ export default ({ item, addItem, deleteItem }) => {
     const otherButtonsComponent = useMemo(
         () => (
             <Fragment>
-                <Button
+                <ActionButton
                     onClick={() =>
                         addItem({
                             variables: {
@@ -131,8 +134,8 @@ export default ({ item, addItem, deleteItem }) => {
                     }
                 >
                     <FontAwesomeIcon icon={faClone} />
-                </Button>
-                <Button
+                </ActionButton>
+                <ActionButton
                     onClick={() =>
                         deleteItem({
                             variables: { id: item.id }
@@ -140,7 +143,7 @@ export default ({ item, addItem, deleteItem }) => {
                     }
                 >
                     <FontAwesomeIcon icon={faTrash} />
-                </Button>
+                </ActionButton>
             </Fragment>
         ),
         [item]
@@ -160,17 +163,29 @@ export default ({ item, addItem, deleteItem }) => {
 const Item = styled.li`
     display: flex;
     justify-content: space-between;
+    margin: 0.4rem;
 `;
 
 const ItemActions = styled.div`
     display: flex;
-    & > * {
-        margin: 0.2rem;
+    justify-content: center;
+    align-items: center;
+    button {
+        height: 2.7rem;
     }
 `;
 
 const UpdateForm = styled.div`
-    & > * {
-        margin-right: 0.2rem;
+    input {
+        margin-top: 0.4rem;
+        margin-right: 0.4rem;
     }
+`;
+
+const UpdatedAt = styled.div`
+    color: grey;
+`;
+
+const ActionButton = styled(Button)`
+    margin-right: 0.4rem;
 `;
