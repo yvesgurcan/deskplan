@@ -133,6 +133,14 @@ export default () => {
 
                 return 0;
             });
+
+            if (updatedItems.length < offset * limit) {
+                const updatedOffset = Math.ceil(
+                    updatedItems.length / limit - 1
+                );
+                setOffset(updatedOffset);
+            }
+
             setFilteredItems(updatedItems);
         }
     }, [items, searchTerm, sortBy, sortOrderModifier]);
