@@ -1,7 +1,7 @@
 {
     "name": "deskplan-service",
     "version": "0.0.1",
-    "description": "DeskPlan Service",
+    "description": "Deskplan Service",
     "main": "index.js",
     "scripts": {
         "start": "concurrently --kill-others \"npm run start:service\" \"npm run start:db\"",
@@ -17,7 +17,6 @@
         "graphql": "^14.6.0",
         "mongodb": "^3.5.3",
         "mongoose": "^5.9.2",
-        "mongoose-update-versioning": "^0.1.1",
         "nodemon": "^2.0.2"
     },
     "devDependencies": {

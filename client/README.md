@@ -1,9 +1,11 @@
-# DeskPlan Client
+# Deskplan Client
 
 ## Dependencies
 
--   React Router
+-   React
+-   Apollo Client
 -   Styled Components
+-   React Router
 
 ## Setup
 
@@ -15,4 +17,4 @@
 
 Runs a development server at `localhost:8080`.
 
-Outputs a build for faster deployment to GitHub Pages.
+Outputs a build at the root of the project for faster deployment to GitHub Pages.

@@ -51,6 +51,8 @@ Our goal is to provide a solution that we like to call the "[JIRA](https://marke
 
 ## Technical features
 
+- Creates Webpack builds optimized for production.
+- Support multiple environments: `dev`, `qa`, and `prod` thanks to a config file and/or environment variables.
 - User authentication with [Passport.js](http://www.passportjs.org/) as middleware.
 - Settings and preferences page.
 - Item version history: Logging of the changes brought to each item [a la Google Drive](https://support.google.com/drive/answer/2409045?co=GENIE.Platform%3DDesktop&hl=en).
@@ -59,6 +61,7 @@ Our goal is to provide a solution that we like to call the "[JIRA](https://marke
 - Unit tests, integration tests, and end-to-end tests with tools such as [Jest](https://jestjs.io/), [React Testing Library](https://github.com/testing-library/react-testing-library) and [Apollo's `createTestClient`](https://www.apollographql.com/docs/apollo-server/testing/testing/).
 - [Theming thanks to Styled Components](https://styled-components.com/docs/advanced#theming).
 - PWA (Progressive Web Application) to allow users to have a native-like experience on mobile devices thanks to a [web app manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest).
+- CI/CD with [Jenkins](https://jenkins.io/) or [GitHub Actions](https://github.com/features/actions) to run tests, create build, and deploy automatically.
 
 ## Development
 
