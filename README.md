@@ -51,7 +51,7 @@ Our goal is to provide a solution that we like to call the "[JIRA](https://marke
 -   Choose between a dark and a light theme.
 -   Provide message feedback to the user when items are being created, updated, or deleted, and when the operation was a success.
 
-## Next: Technical features
+### Next: Technical features
 
 -   Creates Webpack builds optimized for production.
 -   Support multiple environments: `dev`, `qa`, and `prod` thanks to a config file and/or environment variables.
