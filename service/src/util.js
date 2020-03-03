@@ -9,7 +9,6 @@ export async function connect() {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
-    // mongoose.connection.db.dropDatabase();
 }
 
 export function close(result) {
