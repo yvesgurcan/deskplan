@@ -15,5 +15,8 @@ const Dropdown = styled.select`
     font-size: 110%;
     font-family: 'Oxanium';
     height: 2.7rem;
-}
+
+    @media only screen and (max-width: 530px) {
+        width: 100%;
+    }
 `;

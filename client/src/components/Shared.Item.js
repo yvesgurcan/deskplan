@@ -172,6 +172,10 @@ const Item = styled.li`
     display: flex;
     justify-content: space-between;
     min-height: 54px;
+
+    @media only screen and (max-width: 530px) {
+        flex-direction: column;
+    }
 `;
 
 const ViewItem = styled.div`
@@ -182,8 +186,14 @@ const ItemActions = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: 0.2rem;
     button {
         height: 2.7rem;
+    }
+
+    @media only screen and (max-width: 530px) {
+        justify-content: flex-start;
+        margin-bottom: 1rem;
     }
 `;
 

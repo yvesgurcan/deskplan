@@ -132,7 +132,7 @@ export default ({ searchTerm, sortBy, sortOrderModifier, limit, offline }) => {
                     limit={limit}
                 >
                     {slicedItems => (
-                        <ul>
+                        <Items>
                             {slicedItems.map(item => (
                                 <Item
                                     key={item.id}
@@ -142,7 +142,7 @@ export default ({ searchTerm, sortBy, sortOrderModifier, limit, offline }) => {
                                     offline={offline}
                                 />
                             ))}
-                        </ul>
+                        </Items>
                     )}
                 </Paginator>
             ),
@@ -201,6 +201,15 @@ const ItemListContainer = styled.main`
 const Results = styled.div`
     width: 100%;
     max-width: 1200px;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    @media only screen and (max-width: 400px) {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+`;
+
+const Items = styled.ul`
+    padding: 0;
 `;

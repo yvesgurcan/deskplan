@@ -30,5 +30,5 @@ export default ({ offline, offlineAccess, setOfflineAccess }) => (
 
 const OfflineAccess = styled.div`
     text-align: right;
-    padding-right: 1rem;
+    font-size: 90%;
 `;

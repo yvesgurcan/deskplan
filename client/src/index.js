@@ -42,8 +42,6 @@ const App = () => {
         });
     }, []);
 
-    console.log(offline);
-
     return (
         <ApolloProvider client={client}>
             <HashRouter>

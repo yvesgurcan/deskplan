@@ -30,7 +30,10 @@ export default ({
     const searchComponent = useMemo(
         () => (
             <FormGroup>
-                <FontAwesomeIcon icon={faSearch} />{' '}
+                <div>
+                    <FontAwesomeIcon icon={faSearch} />
+                    &nbsp;
+                </div>
                 <TextInput
                     type="search"
                     placeholder="Search"
@@ -45,7 +48,7 @@ export default ({
     const sortByComponent = useMemo(
         () => (
             <FormGroup>
-                Sort:{' '}
+                <div>Sort:&nbsp;</div>
                 <Dropdown
                     value={sortBy}
                     options={SORT_OPTIONS}
@@ -59,7 +62,7 @@ export default ({
     const limitComponent = useMemo(
         () => (
             <FormGroup>
-                Per page:{' '}
+                <div>Per page:&nbsp;</div>
                 <Dropdown
                     value={limit}
                     options={LIMIT_OPTIONS}
@@ -104,11 +107,13 @@ export default ({
     return (
         <SearchBar>
             {searchComponent}
-            {sortByComponent}
             <SecondaryFilters>
+                {sortByComponent}
                 {limitComponent}
-                {sortOrderComponent}
-                {openAddComponent}
+                <div>
+                    {sortOrderComponent}
+                    {openAddComponent}
+                </div>
             </SecondaryFilters>
         </SearchBar>
     );
@@ -129,4 +134,10 @@ const SecondaryFilters = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
+
+    @media only screen and (max-width: 530px) {
+        width: 100%;
+        flex-direction: column;
+    }
 `;

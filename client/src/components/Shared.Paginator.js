@@ -42,4 +42,5 @@ export default ({ children, ...props }) => (
 const ControlsContainer = styled.div`
     display: flex;
     justify-content: space-between;
+    padding: 1rem;
 `;
