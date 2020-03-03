@@ -5,10 +5,14 @@ import mongoose from 'mongoose';
 mongoose.set('useFindAndModify', false);
 
 export async function connect() {
-    await mongoose.connect('mongodb://localhost:27017/deskplan', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
+    try {
+        await mongoose.connect('mongodb://localhost:27017/deskplan', {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+    } catch (error) {
+        console.error('Could not connect to DB', error);
+    }
 }
 
 export function close(result) {
