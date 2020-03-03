@@ -11,10 +11,13 @@
 ## Features
 
 - Manage your inventory: Create, view, update, and delete items.
+- A set of starter items help you begin keeping track of your inventory.
 - Search your items by name.
-- Sort your items by date of creation, date of last update, name, or quantity.
-- Duplicate an existing item to create a different one.
+- Sort your items by date of creation, date of last update, name, or quantity to find them more easily.
+- Duplicate an existing item to use as a base to create a different one.
+- The application will adapt to the size of your screen so that you can continue to work even on small devices.
 - Access your inventory even if you are offline or experiencing connectivity issues (thanks to Apollo Persistent Cache and Workbox Service Worker).
+- Update your inventory in no more than two clicks.
 
 ## Development
 

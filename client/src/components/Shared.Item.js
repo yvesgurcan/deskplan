@@ -18,7 +18,7 @@ import TextInput from './Shared.TextInput';
 import NumberInput from './Shared.NumberInput';
 import Error from './Shared.Error';
 
-export default ({ item, addItem, deleteItem, offline }) => {
+export default ({ item, addItem, deleteItem, offline, checked }) => {
     const [editMode, setEditMode] = useState(false);
     const [itemToUpdate, setItemToUpdate] = useState(item);
 
@@ -45,7 +45,7 @@ export default ({ item, addItem, deleteItem, offline }) => {
     const editItemComponent = useMemo(
         () => (
             <UpdateForm>
-                <TextInput
+                <NameInput
                     disabled={offline}
                     value={itemToUpdate.name}
                     placeholder="Name of item"
@@ -56,17 +56,30 @@ export default ({ item, addItem, deleteItem, offline }) => {
                         })
                     }
                 />
-                <NumberInput
-                    disabled={offline}
-                    value={itemToUpdate.quantity}
-                    placeholder="Qty"
-                    onChange={event =>
-                        setItemToUpdate({
-                            ...itemToUpdate,
-                            quantity: event.target.value
-                        })
-                    }
-                />
+                <SecondaryInput>
+                    <NameInput
+                        disabled={offline}
+                        value={itemToUpdate.link}
+                        placeholder="URL to item details"
+                        onChange={event =>
+                            setItemToUpdate({
+                                ...itemToUpdate,
+                                link: event.target.value
+                            })
+                        }
+                    />
+                    <NumberInput
+                        disabled={offline}
+                        value={itemToUpdate.quantity}
+                        placeholder="Qty"
+                        onChange={event =>
+                            setItemToUpdate({
+                                ...itemToUpdate,
+                                quantity: event.target.value
+                            })
+                        }
+                    />
+                </SecondaryInput>
                 <Error error={updateItemError} />
             </UpdateForm>
         ),
@@ -80,9 +93,15 @@ export default ({ item, addItem, deleteItem, offline }) => {
     const viewItemComponent = useMemo(
         () => (
             <ViewItem>
-                <div>
-                    {item.name} ({item.quantity})
-                </div>
+                <ItemLink
+                    href={item.link || null}
+                    target="_blank"
+                    noreferrer
+                    noopener
+                >
+                    {item.name} (&times;
+                    {item.quantity})
+                </ItemLink>
                 <UpdatedAt>{updatedAtLocal.toRelative()} </UpdatedAt>
             </ViewItem>
         ),
@@ -182,6 +201,15 @@ const ViewItem = styled.div`
     margin-bottom: 0.2rem;
 `;
 
+const ItemLink = styled.a`
+    color: inherit;
+    text-decoration: none;
+
+    &[href]:hover {
+        text-decoration: underline;
+    }
+`;
+
 const ItemActions = styled.div`
     display: flex;
     justify-content: center;
@@ -198,9 +226,13 @@ const ItemActions = styled.div`
 `;
 
 const UpdateForm = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
     margin-bottom: 0.2rem;
     input {
         margin-top: 0.4rem;
+        margin-bottom: 0.4rem;
         margin-right: 0.4rem;
     }
 `;
@@ -211,4 +243,17 @@ const UpdatedAt = styled.div`
 
 const ActionButton = styled(Button)`
     margin-right: 0.4rem;
+`;
+
+const NameInput = styled(TextInput)`
+    flex-grow: 1;
+`;
+
+const SecondaryInput = styled.div`
+    display: flex;
+    flex: 2;
+
+    @media only screen and (max-width: 885px) {
+        width: 100%;
+    }
 `;

@@ -3,6 +3,7 @@ import { gql } from 'apollo-server';
 const ItemFields = `
     name: String!
     quantity: Int
+    link: String
 `;
 
 export default gql`

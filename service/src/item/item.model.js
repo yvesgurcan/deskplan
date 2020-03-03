@@ -8,10 +8,7 @@ const itemSchema = new mongoose.Schema(
             required: [true, 'Quantity is required.'],
             integer: true
         },
-        type: String,
-        location: String,
-        assignedTo: String,
-        orderStatus: String
+        link: String
     },
     {
         timestamps: true,

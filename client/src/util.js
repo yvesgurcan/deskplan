@@ -23,7 +23,7 @@ export const LIMIT_OPTIONS = [10, 20, 30, 40, 50];
 
 export const DEFAULT_ADD_ITEM = {
     name: '',
-    quantity: 0
+    quantity: 1
 };
 
 export function useIsMounted() {

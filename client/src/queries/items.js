@@ -6,6 +6,19 @@ export const ITEM_FIELDS = `
     updatedAt
     name
     quantity
+    link
+`;
+
+export const ITEM_FIELDS_INPUT_TYPES = `
+    $name: String!,
+    $quantity: Int,
+    $link: String
+`;
+
+export const ITEM_FIELDS_INPUT = `
+    name: $name,
+    quantity: $quantity,
+    link: $link
 `;
 
 export const GET_ITEMS = gql`
@@ -17,8 +30,8 @@ export const GET_ITEMS = gql`
 `;
 
 export const ADD_ITEM = gql`
-    mutation addItem($name: String!, $quantity: Int) {
-        addItem(name: $name, quantity: $quantity) {
+    mutation addItem(${ITEM_FIELDS_INPUT_TYPES}) {
+        addItem(${ITEM_FIELDS_INPUT}) {
             ${ITEM_FIELDS}
         }
     }
@@ -33,8 +46,8 @@ export const ADD_STARTER_ITEMS = gql`
 `;
 
 export const UPDATE_ITEM = gql`
-    mutation updateItem($id: ID!, $name: String!, $quantity: Int) {
-        updateItem(id: $id, name: $name, quantity: $quantity) {
+    mutation updateItem($id: ID!, ${ITEM_FIELDS_INPUT_TYPES}) {
+        updateItem(id: $id, ${ITEM_FIELDS_INPUT}) {
             id
             ${ITEM_FIELDS}
         }

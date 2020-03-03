@@ -37,7 +37,7 @@ export default ({ offline }) => {
                 }}
             >
                 <FormGroup>
-                    Name:{' '}
+                    Name:&nbsp;
                     <TextInput
                         disabled={offline}
                         placeholder="Name of item to add"
@@ -51,22 +51,38 @@ export default ({ offline }) => {
                     />
                 </FormGroup>
                 <FormGroup>
-                    Quantity:{' '}
-                    <NumberInput
+                    Link:&nbsp;
+                    <TextInput
                         disabled={offline}
-                        placeholder="Qty"
-                        value={itemToAdd.quantity}
+                        placeholder="URL to item details"
+                        value={itemToAdd.link}
                         onChange={event =>
                             setItemToAdd({
                                 ...itemToAdd,
-                                quantity: event.target.value
+                                link: event.target.value
                             })
                         }
                     />
                 </FormGroup>
-                <AddButton disabled={offline}>
-                    <FontAwesomeIcon icon={faSave} />
-                </AddButton>
+                <SecondaryInput>
+                    <FormGroup>
+                        Quantity:&nbsp;
+                        <NumberInput
+                            disabled={offline}
+                            placeholder="Qty"
+                            value={itemToAdd.quantity}
+                            onChange={event =>
+                                setItemToAdd({
+                                    ...itemToAdd,
+                                    quantity: event.target.value
+                                })
+                            }
+                        />
+                    </FormGroup>
+                    <AddButton disabled={offline}>
+                        <FontAwesomeIcon icon={faSave} />
+                    </AddButton>
+                </SecondaryInput>
             </AddForm>
         </Fragment>
     );
@@ -74,6 +90,7 @@ export default ({ offline }) => {
 
 const AddForm = styled.form`
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     min-width: 100%;
     border-top: 1px solid black;
@@ -83,10 +100,18 @@ const AddForm = styled.form`
     margin: 0;
 `;
 
+const SecondaryInput = styled.div`
+    display: flex;
+
+    @media only screen and (max-width: 530px) {
+        width: 100%;
+    }
+`;
+
 const AddButton = styled(FormButton)`
     margin-left: 1rem;
 
-    @media only screen and (max-width: 632px) {
+    @media only screen and (max-width: 530px) {
         margin-top: 1.8rem;
     }
 `;
