@@ -15,7 +15,7 @@ An MVP (minimum viable product) with some nice-to-have features.
 ### Product features
 
 - Manage your office assets: Create, view, update, and delete items.
-- Begin with a set of starter items to help you keeping track of inventory from the get go.
+- Begin with a set of starter items to help you keep track of inventory from the get go.
 - Search your items by name.
 - Sort your items by date of creation, date of last update, name, or quantity to find them more easily.
 - Add links to your items to view the properties of your assets easily.
@@ -23,6 +23,7 @@ An MVP (minimum viable product) with some nice-to-have features.
 - The user interface adapts to the size of your screen so that you can work on small devices or large screens.
 - Responsive design: Access your inventory even if you are offline or experiencing connectivity issues.
 - Update your inventory in no more than two clicks.
+- Something went wrong? A message informs you, if possible, about the nature of the error.
 
 ### Technical features
 
@@ -38,7 +39,7 @@ An MVP (minimum viable product) with some nice-to-have features.
 
 Our goal is to provide a solution that we like to call the "[JIRA](https://marketplace.atlassian.com/apps/1211849/assets-and-inventory-plugin-for-jira?hosting=server&tab=overview) of inventory management".
 
-### Product features
+### Next: Product features
 
 - Support multiple organizations and users behind a paywall.
 - Choose among various starter item templates tailored to best fit the needs of your office.
@@ -48,20 +49,23 @@ Our goal is to provide a solution that we like to call the "[JIRA](https://marke
 - Keep track of where items are located.
 - Add your own properties to the items within the inventory.
 - Choose between a dark and a light theme.
+- Provide message feedback to the user when items are being created, updated, or deleted, and when the operation was a success.
 
-## Technical features
+## Next: Technical features
 
 - Creates Webpack builds optimized for production.
 - Support multiple environments: `dev`, `qa`, and `prod` thanks to a config file and/or environment variables.
 - User authentication with [Passport.js](http://www.passportjs.org/) as middleware.
 - Settings and preferences page.
-- Item version history: Logging of the changes brought to each item [a la Google Drive](https://support.google.com/drive/answer/2409045?co=GENIE.Platform%3DDesktop&hl=en).
 - Server-side caching strategy with [Node-Cache](https://www.npmjs.com/package/node-cache) or [Redis](https://redis.io/).
+- Use the [Apollo PubSub feature](https://www.apollographql.com/docs/apollo-server/data/subscriptions/) to push changes to the client when the database is updated by an external source.
+- CI/CD with [Jenkins](https://jenkins.io/) or [GitHub Actions](https://github.com/features/actions) to run tests, create build, and deploy automatically.
 - [Tighter validation on item URLs](https://www.npmjs.com/package/mongoose-type-url).
 - Unit tests, integration tests, and end-to-end tests with tools such as [Jest](https://jestjs.io/), [React Testing Library](https://github.com/testing-library/react-testing-library) and [Apollo's `createTestClient`](https://www.apollographql.com/docs/apollo-server/testing/testing/).
 - [Theming thanks to Styled Components](https://styled-components.com/docs/advanced#theming).
 - PWA (Progressive Web Application) to allow users to have a native-like experience on mobile devices thanks to a [web app manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest).
-- CI/CD with [Jenkins](https://jenkins.io/) or [GitHub Actions](https://github.com/features/actions) to run tests, create build, and deploy automatically.
+
+- Item version history: Logging of the changes brought to each item [a la Google Drive](https://support.google.com/drive/answer/2409045?co=GENIE.Platform%3DDesktop&hl=en).
 
 ## Development
 
