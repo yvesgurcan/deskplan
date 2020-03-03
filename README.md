@@ -69,8 +69,6 @@ Our goal is to provide a solution that we like to call the "[JIRA](https://marke
 
 ## Development
 
-### Set up
-
 You need `node`, `npm`, and `mongod` (see [instructions](https://docs.mongodb.com/manual/administration/install-community/)) to be available globally on your machine. All other dependencies are installed at the project level.
 
 See instructions for [client](./client) and [service](./service).

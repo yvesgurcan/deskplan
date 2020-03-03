@@ -1,6 +1,6 @@
 # Deskplan Client
 
-## Dependencies
+## Critical dependencies
 
 -   React
 -   Apollo Client
