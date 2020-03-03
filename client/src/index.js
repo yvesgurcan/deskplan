@@ -6,7 +6,6 @@ import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
-
 import { usePrevious } from './util';
 import Home from './views/Home';
 import Header from './components/Shared.Header';
