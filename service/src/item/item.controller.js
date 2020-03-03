@@ -8,6 +8,7 @@ export async function getItems() {
         close();
         return result;
     } catch (error) {
+        close();
         parseMongooseErrors(error);
     }
 }
@@ -19,6 +20,7 @@ export async function addItem(_, item) {
         close();
         return result;
     } catch (error) {
+        close();
         parseMongooseErrors(error);
     }
 }
@@ -34,16 +36,22 @@ export async function updateItem(_, item) {
         close();
         return result;
     } catch (error) {
+        close();
         parseMongooseErrors(error);
     }
 }
 
 export async function deleteItem(_, { id }) {
     connect();
-    const result = await ItemModel.findOneAndRemove({ _id: id });
-    close();
-    const { _id } = result;
-    return _id;
+    try {
+        const result = await ItemModel.findOneAndRemove({ _id: id });
+        close();
+        const { _id } = result;
+        return _id;
+    } catch (error) {
+        close();
+        parseMongooseErrors(error);
+    }
 }
 
 export async function addStarterItems() {
@@ -177,6 +185,7 @@ export async function addStarterItems() {
         close();
         return result;
     } catch (error) {
+        close();
         parseMongooseErrors(error);
     }
 }
