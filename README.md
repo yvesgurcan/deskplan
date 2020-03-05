@@ -19,9 +19,9 @@ An MVP (minimum viable product) with some nice-to-have features.
 -   Search your items by name.
 -   Sort your items by date of creation, date of last update, name, or quantity to find them more easily.
 -   Add links to your items to view the properties of your assets easily.
--   Duplicate existing items to use as a base to create a new ones.
--   The user interface adapts to the size of your screen so that you can work on small devices or large screens.
--   Responsive design: Access your inventory even if you are offline or experiencing connectivity issues.
+-   Duplicate existing items to use as a base to create new ones.
+-   Responsive design: The user interface adapts to the size of your screen so that you can work on small devices or large screens.
+-   Access your inventory even if you are offline or experiencing connectivity issues.
 -   Update your inventory in no more than two clicks.
 -   Something went wrong? A message informs you, if possible, about the nature of the error.
 
