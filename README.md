@@ -53,7 +53,7 @@ Our goal is to provide a solution that we like to call the "[JIRA](https://marke
 
 ### Next: Technical features
 
--   Creates Webpack builds optimized for production.
+-   Create Webpack builds optimized for production.
 -   Support multiple environments: `dev`, `qa`, and `prod` thanks to a config file and/or environment variables.
 -   User authentication with [Passport.js](http://www.passportjs.org/) as middleware.
 -   Settings and preferences page.
